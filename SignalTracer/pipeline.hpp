@@ -67,13 +67,14 @@ namespace math
 		}
 
 		const Matrix4f& GetWorldTrans() {
-			Matrix4f ScaleTrans, RotateTrans, TranslationTrans;
+			Matrix4f ScaleTrans, RotateTrans, TranslationTrans, PersProjTrans;
 
 			ScaleTrans.InitScaleTransform(m_scale.x, m_scale.y, m_scale.z);
 			RotateTrans.InitRotateTransform(m_rotateInfo.x, m_rotateInfo.y, m_rotateInfo.z);
 			TranslationTrans.InitTranslationTransform(m_worldPos.x, m_worldPos.y, m_worldPos.z);
+			PersProjTrans.InitPersProjTransform(m_persProj.FOV, m_persProj.Width, m_persProj.Height, m_persProj.zNear, m_persProj.zFar);
 
-			m_WorldTransformation = TranslationTrans * RotateTrans * ScaleTrans;
+			m_WorldTransformation = PersProjTrans * TranslationTrans * RotateTrans * ScaleTrans;
 
 			return m_WorldTransformation;
 		}

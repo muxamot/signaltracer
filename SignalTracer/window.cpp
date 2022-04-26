@@ -1,3 +1,6 @@
+#include <gl/glew.h>
+#include <glut.h>
+
 #include "window.hpp"
 #include "logger.hpp"
 
@@ -40,19 +43,22 @@ namespace sgtr {
 			exit(1);
 		}
 
+		SDL_GL_SetSwapInterval(1);
+
 		LOG(INFO) << "Initialized SDL window";
+
+		GLenum res = glewInit();
+		if (res != GLEW_OK) {
+			LOG(ERROR) << "GLEW initialization failed; glew says: " << glewGetErrorString(res);
+			throw std::exception("Render initialization failed");
+		}
+
+		LOG(INFO) << "Initialized GLEW";
 
 		// OpenGL init
 
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f); 
-		glClearDepth(1.0);
-		glDepthFunc(GL_LESS);
-		glEnable(GL_DEPTH_TEST); 
-		glShadeModel(GL_SMOOTH);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		gluPerspective(45.0f, (float)desc_.width_ / (float)desc_.height_, 0.1f, 100.0f);
-		glMatrixMode(GL_MODELVIEW); 
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	bool Window::event_polling()

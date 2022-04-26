@@ -2,6 +2,7 @@
 
 #include "types.hpp"
 #include "model.hpp"
+#include "shaders.hpp"
 
 namespace sgtr
 {
@@ -9,6 +10,9 @@ namespace sgtr
 	{
 	private:
 		sptr<Model> model_;
+		sptr<Shaders> shaders_;
+
+		GLuint uworld_;
 
 	public:
 		Renderer();

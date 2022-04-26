@@ -41,7 +41,7 @@ namespace sgtr {
 	void Model::CreateIndexBuffer()
 	{
 		unsigned int Indices[] =
-		{ 0, 1, 2,
+		{ 0, 1, 2, 
 		  2, 3, 0,
 		  4, 5, 6 };
 

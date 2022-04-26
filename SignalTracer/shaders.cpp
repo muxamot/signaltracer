@@ -30,8 +30,7 @@ namespace sgtr {
 
 		std::string line;
 
-		while (fs && !fs.eof())
-		{
+		while (fs && !fs.eof()) {
 			line.clear();
 			std::getline(fs, line);
 			stringbuf += (line + std::string("\n"));
