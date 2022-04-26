@@ -1,0 +1,7 @@
+Debug/*
+Release/*
+x64/*
+SignalTracer/Debug/*
+SignalTracer/Release/*
+SignalTracer/x64/*
+SignalTracer/*.user
