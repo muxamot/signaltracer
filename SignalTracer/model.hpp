@@ -17,8 +17,8 @@ namespace sgtr
 		void load();
 	private:
 
-		void CreateVertexBuffer();
-		void CreateIndexBuffer();
+		void createVertexBuffer();
+		void createIndexBuffer();
 	};
 
 

@@ -69,7 +69,7 @@ namespace math
 
 		Vector3f& Normalize();
 
-		void Rotate(double Angle, const Vector3f& Axis);
+		void Rotate(float Angle, const Vector3f& Axis);
 
 		void Print() const
 		{

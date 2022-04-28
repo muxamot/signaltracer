@@ -15,24 +15,37 @@ namespace sgtr {
 	struct WindowDescriptor
 	{
 		redraw_cb_t redraw_callback_;
-		kpress_cb_t keypress_callback_;
+		kpress_cb_t action_callback_;
 		
 		int width_;
 		int height_;
+	};
+
+	enum MouseState
+	{
+		UP,
+		DOWN
 	};
 
 	class Window
 	{
 	private:
 		WindowDescriptor desc_;
+		bool drag_{ false };
+		int x_{ 0 };
+		int y_{ 0 };
 
 		SDL_Window* sdl_window_;
 		SDL_GLContext sdl_glcontext_;
+		SDL_Cursor* sdl_cursor_;
 
-		void sdl_init();
-		bool event_polling();
+		void sdlInit();
+		bool eventPolling();
 		void redraw();
-		void keyboard_event(SDL_Keycode);
+		void keyboardEvent(SDL_Keycode);
+
+		void onMouseButton(MouseState);
+		void onWheelStroke(int);
 
 	public:
 		Window() = delete;

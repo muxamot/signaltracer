@@ -24,15 +24,15 @@ namespace math
 		return *this;
 	}
 
-	void Vector3f::Rotate(double Angle, const Vector3f& Axe)
+	void Vector3f::Rotate(float Angle, const Vector3f& Axe)
 	{
-		const double SinHalfAngle = sinf(ToRadian(Angle / 2));
-		const double CosHalfAngle = cosf(ToRadian(Angle / 2));
+		const float SinHalfAngle = sinf(ToRadian(Angle / 2));
+		const float CosHalfAngle = cosf(ToRadian(Angle / 2));
 
-		const double Rx = Axe.x * SinHalfAngle;
-		const double Ry = Axe.y * SinHalfAngle;
-		const double Rz = Axe.z * SinHalfAngle;
-		const double Rw = CosHalfAngle;
+		const float Rx = Axe.x * SinHalfAngle;
+		const float Ry = Axe.y * SinHalfAngle;
+		const float Rz = Axe.z * SinHalfAngle;
+		const float Rw = CosHalfAngle;
 		Quaternion RotationQ(Rx, Ry, Rz, Rw);
 
 		Quaternion ConjugateQ = RotationQ.Conjugate();

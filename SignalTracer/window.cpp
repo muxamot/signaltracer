@@ -9,15 +9,16 @@ namespace sgtr {
 	Window::Window(WindowDescriptor desc)
 		: desc_(desc)
 	{
-		sdl_init();
+		sdlInit();
 	}
 
 	Window::~Window()
 	{
 		SDL_DestroyWindow(sdl_window_);
+		SDL_FreeCursor(sdl_cursor_);
 	}
 
-	void Window::sdl_init()
+	void Window::sdlInit()
 	{
 		if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 			LOG(ERROR) << "Unable to init SDL, error: " << SDL_GetError();
@@ -45,6 +46,9 @@ namespace sgtr {
 
 		SDL_GL_SetSwapInterval(1);
 
+		sdl_cursor_ = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEALL);
+		SDL_SetCursor(sdl_cursor_);
+
 		LOG(INFO) << "Initialized SDL window";
 
 		GLenum res = glewInit();
@@ -61,27 +65,49 @@ namespace sgtr {
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	void Window::keyboard_event(SDL_Keycode kcode)
+	void Window::keyboardEvent(SDL_Keycode kcode)
 	{
-		UserAction act;
+		Action act;
 		switch (kcode)
 		{
-			case SDLK_UP: act = UserAction::UP; break;
-			case SDLK_DOWN: act = UserAction::DOWN; break;
-			case SDLK_LEFT: act = UserAction::LEFT; break;
-			case SDLK_RIGHT: act = UserAction::RIGHT; break;
-			case SDLK_w: act = UserAction::FORWARD; break;
-			case SDLK_s: act = UserAction::BACKWARD; break;
+			case SDLK_UP: act = Action::UP; break;
+			case SDLK_DOWN: act = Action::DOWN; break;
+			case SDLK_LEFT: act = Action::LEFT; break;
+			case SDLK_RIGHT: act = Action::RIGHT; break;
+			case SDLK_w: act = Action::FORWARD; break;
+			case SDLK_s: act = Action::BACKWARD; break;
 
 			default:
 				LOG(WARN) << "No handler for this button, try another!";
 				return;
 		}
 
-		desc_.keypress_callback_(act);
+		desc_.action_callback_(UserAction{ act });
 	}
 
-	bool Window::event_polling()
+	void Window::onMouseButton(MouseState state)
+	{
+		if (state == DOWN) {
+			if (SDL_CaptureMouse(SDL_TRUE) != 0)
+				LOG(WARN) << "Mouse capturing is not supported - you have really strange system.";
+
+			SDL_GetRelativeMouseState(&x_, &y_);
+
+			drag_ = true;
+			return;
+		}
+
+		SDL_CaptureMouse(SDL_FALSE);
+		drag_ = false;
+	}
+
+	void Window::onWheelStroke(int scroll)
+	{
+		Action act = (scroll > 0) ? Action::FORWARD : Action::BACKWARD;
+		desc_.action_callback_(UserAction{ act, {},  std::abs(scroll) });
+	}
+
+	bool Window::eventPolling()
 	{
 		SDL_Event event;
 
@@ -89,17 +115,31 @@ namespace sgtr {
 			switch (event.type) { 
 			case SDL_QUIT:
 				return false;
-
+			//mouse events
+			case SDL_MOUSEWHEEL:
+				onWheelStroke(event.wheel.y);
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				onMouseButton(DOWN);
+				break;
+			case SDL_MOUSEBUTTONUP:
+				onMouseButton(UP);
+				break;
 			//keypress processing
 			case SDL_KEYDOWN:
 				switch (event.key.keysym.sym) { 
 				case SDLK_ESCAPE:
 					return false;
 				default:
-					keyboard_event(event.key.keysym.sym);
+					keyboardEvent(event.key.keysym.sym);
 				}
 				break;
 			}
+		}
+
+		if (drag_) {
+			SDL_GetRelativeMouseState(&x_, &y_);
+			desc_.action_callback_(UserAction{ Action::ROLL, math::Vector2i{x_, y_} });
 		}
 
 		return true;
@@ -112,7 +152,7 @@ namespace sgtr {
 
 	int Window::display()
 	{
-		while (event_polling()) {
+		while (eventPolling()) {
 			redraw();
 
 			glFlush();

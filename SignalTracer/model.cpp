@@ -10,8 +10,8 @@ namespace sgtr {
 	void Model::load()
 	{
 		try {
-			CreateVertexBuffer();
-			CreateIndexBuffer();
+			createVertexBuffer();
+			createIndexBuffer();
 		}
 		catch (const std::exception& ex)
 		{
@@ -19,7 +19,7 @@ namespace sgtr {
 		}
 	}
 
-	void Model::CreateVertexBuffer()
+	void Model::createVertexBuffer()
 	{
 		using namespace math;
 
@@ -38,7 +38,7 @@ namespace sgtr {
 		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
 	}
 
-	void Model::CreateIndexBuffer()
+	void Model::createIndexBuffer()
 	{
 		unsigned int Indices[] =
 		{ 0, 1, 2, 
