@@ -23,6 +23,17 @@ namespace sgtr {
 
 	class Window
 	{
+	private:
+		WindowDescriptor desc_;
+
+		SDL_Window* sdl_window_;
+		SDL_GLContext sdl_glcontext_;
+
+		void sdl_init();
+		bool event_polling();
+		void redraw();
+		void keyboard_event(SDL_Keycode);
+
 	public:
 		Window() = delete;
 		Window(Window&&) = delete;
@@ -31,15 +42,5 @@ namespace sgtr {
 		~Window();
 
 		int display();
-
-	private:
-		WindowDescriptor desc_;
-		
-		SDL_Window* sdl_window_;
-		SDL_GLContext sdl_glcontext_; 
-
-		void sdl_init();
-		bool event_polling();
-		void redraw();
 	};
 }

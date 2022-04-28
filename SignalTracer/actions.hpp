@@ -1,11 +1,32 @@
 #pragma once
 
+#include "renderer.hpp"
+#include "types.hpp"
+
 namespace sgtr
 {
 	enum class UserAction {
-		FORWARD,
-		BACKWARD,
+		// coords
+		UP,
+		DOWN,
 		LEFT,
-		RIGHT
+		RIGHT,
+		FORWARD,
+		BACKWARD
+
+		// angles
+	};
+
+	class ActionsController 
+	{
+	private:
+		constexpr static float POSITION_SENSITIVITY = 0.1f;
+
+		sptr<Renderer> renderer_;
+
+	public:
+		ActionsController(sptr<Renderer>);
+
+		void onAction(const UserAction&);
 	};
 }

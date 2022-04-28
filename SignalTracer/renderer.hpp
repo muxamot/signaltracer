@@ -3,6 +3,7 @@
 #include "types.hpp"
 #include "model.hpp"
 #include "shaders.hpp"
+#include "vector.hpp"
 
 namespace sgtr
 {
@@ -14,10 +15,16 @@ namespace sgtr
 
 		GLuint uworld_;
 
-	public:
-		Renderer();
+		math::Vector3f position_;
+		math::Vector3f rotation_;
 
-		void render(unsigned viewport_w, unsigned viewport_h);
+	public:
+		Renderer() = default;
+
 		void init();
+		void render(unsigned viewport_w, unsigned viewport_h);
+
+		void applyPositionDelta(const math::Vector3f&);
+		void applyRotationDelta(const math::Vector3f&);
 	};
 }

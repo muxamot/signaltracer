@@ -61,6 +61,26 @@ namespace sgtr {
 		glEnable(GL_DEPTH_TEST);
 	}
 
+	void Window::keyboard_event(SDL_Keycode kcode)
+	{
+		UserAction act;
+		switch (kcode)
+		{
+			case SDLK_UP: act = UserAction::UP; break;
+			case SDLK_DOWN: act = UserAction::DOWN; break;
+			case SDLK_LEFT: act = UserAction::LEFT; break;
+			case SDLK_RIGHT: act = UserAction::RIGHT; break;
+			case SDLK_w: act = UserAction::FORWARD; break;
+			case SDLK_s: act = UserAction::BACKWARD; break;
+
+			default:
+				LOG(WARN) << "No handler for this button, try another!";
+				return;
+		}
+
+		desc_.keypress_callback_(act);
+	}
+
 	bool Window::event_polling()
 	{
 		SDL_Event event;
@@ -75,6 +95,8 @@ namespace sgtr {
 				switch (event.key.keysym.sym) { 
 				case SDLK_ESCAPE:
 					return false;
+				default:
+					keyboard_event(event.key.keysym.sym);
 				}
 				break;
 			}

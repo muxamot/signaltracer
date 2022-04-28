@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="actions.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix.cpp" />
     <ClCompile Include="model.cpp" />

@@ -2,8 +2,9 @@
 
 #define _USE_MATH_DEFINES
 
-#include <cstdio>
 #include <cmath>
+
+#include "logger.hpp"
 
 #define ToRadian(x) ((x) * M_PI / 180.0f)
 #define ToDegree(x) ((x) * 180.0f / M_PI)
@@ -13,43 +14,30 @@ namespace math
 
 	struct Vector2i
 	{
-		int x;
-		int y;
+		int x{0};
+		int y{0};
 	};
 
 	struct Vector2f
 	{
-		float x;
-		float y;
+		float x { 0.0f };
+		float y { 0.0f };
 
-		Vector2f()
-		{
-		}
-
-		Vector2f(float _x, float _y)
-		{
-			x = _x;
-			y = _y;
-		}
+		Vector2f() = default;
+		explicit Vector2f(float _x, float _y)
+			: x(_x), y(_y) {};
 	};
 
 	struct Vector3f
 	{
-		float x;
-		float y;
-		float z;
+		float x { 0.0f };
+		float y { 0.0f };
+		float z { 0.0f };
 
-		Vector3f()
-		{
-		}
-
-		Vector3f(float _x, float _y, float _z)
-		{
-			x = _x;
-			y = _y;
-			z = _z;
-		}
-
+		Vector3f() = default;
+		explicit Vector3f(float _x, float _y, float _z)
+			: x(_x), y(_y), z(_z) {};
+	
 		Vector3f& operator+=(const Vector3f& r)
 		{
 			x += r.x;
@@ -85,7 +73,8 @@ namespace math
 
 		void Print() const
 		{
-			printf("(%.02f, %.02f, %.02f", x, y, z);
+			using namespace sgtr;
+			LOG(INFO) << "vec3(x: " << x << ", y: " << y << ", z: " << z << ")";
 		}
 	};
 
@@ -118,22 +107,14 @@ namespace math
 
 	struct Vector4f
 	{
-		float x;
-		float y;
-		float z;
-		float w;
+		float x { 0.0f };
+		float y { 0.0f };
+		float z { 0.0f };
+		float w { 0.0f };
 
-		Vector4f()
-		{
-		}
-
-		Vector4f(float _x, float _y, float _z, float _w)
-		{
-			x = _x;
-			y = _y;
-			z = _z;
-			w = _w;
-		}
+		Vector4f() = default;
+		explicit Vector4f(float _x, float _y, float _z, float _w)
+			: x(_x), y(_y), z(_z), w(_w) {};
 
 		Vector4f& operator+=(const Vector4f& r)
 		{
@@ -167,7 +148,8 @@ namespace math
 
 		void Print() const
 		{
-			printf("(%.02f, %.02f, %.02f, %.02f", x, y, z, w);
+			using namespace sgtr;
+			LOG(INFO) << "vec4(x: " << x << ", y: " << y << ", z: " << z << ", w: " << w << ")";
 		}
 	};
 

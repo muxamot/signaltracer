@@ -12,14 +12,14 @@
 
 namespace sgtr {
 
-	unsigned num = 3;
-	float a = 0;
-	float b = 0;
-	float c = 0;
-
-	Renderer::Renderer() 
+	void Renderer::applyPositionDelta(const math::Vector3f& delta)
 	{
-		
+		position_ += delta;
+	}
+
+	void Renderer::applyRotationDelta(const math::Vector3f& delta)
+	{
+		rotation_ += delta;
 	}
 
 	void Renderer::init()
@@ -45,13 +45,8 @@ namespace sgtr {
 		glLoadIdentity();
 
 		math::Pipeline p;
-
-		//a += 0.01;
-		b += 0.3;
-		//c += 0.01;
-
-		p.Rotate(a, b, c);
-		p.WorldPos(0.0f, 0.0f, 30.0f);
+		p.Rotate(rotation_.x, rotation_.y, rotation_.z);
+		p.WorldPos(position_.x, position_.y, position_.z);
 		p.SetPerspectiveProj(75.0f, viewport_w, viewport_h, 1.0f, 10000.0f);
 
 		glUniformMatrix4fv(uworld_, 1, GL_TRUE, (const GLfloat*)p.GetWorldTrans().m);
