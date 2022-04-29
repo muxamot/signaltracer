@@ -1,9 +1,7 @@
-#include <gl/glew.h>
-#include <glut.h>
-
 #include <fstream>
 #include <string>
 
+#include "opengl.hpp"
 #include "shaders.hpp"
 #include "logger.hpp"
 

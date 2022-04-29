@@ -1,8 +1,6 @@
 #include <exception>
 
-#include <gl/glew.h>
-#include <glut.h>
-
+#include "opengl.hpp"
 #include "renderer.hpp"
 #include "pipeline.hpp"
 #include "vertex.hpp"
@@ -22,7 +20,7 @@ namespace sgtr {
 		rotation_ += delta;
 	}
 
-	void Renderer::init()
+	void Renderer::init(sptr<Model> model)
 	{
 		GLenum res = glewInit();
 		if (res != GLEW_OK) {
@@ -30,9 +28,7 @@ namespace sgtr {
 			throw std::exception("Render initialization failed");
 		}
 
-		model_ = std::make_shared<Model>();
-		model_->load();
-
+		model_ = std::move(model);
 		shaders_ = std::make_shared<Shaders>();
 		uworld_ = shaders_->setUniform("gWorld");
 
@@ -43,25 +39,32 @@ namespace sgtr {
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glLoadIdentity();
-
-		math::Pipeline p;
-		p.Rotate(rotation_.x, rotation_.y, rotation_.z);
-		p.WorldPos(position_.x, position_.y, position_.z);
-		p.SetPerspectiveProj(75.0f, viewport_w, viewport_h, 1.0f, 10000.0f);
-
-		glUniformMatrix4fv(uworld_, 1, GL_TRUE, (const GLfloat*)p.GetWorldTrans().m);
-
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, model_->VBO);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(math::Vertex), 0);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(math::Vertex), (const GLvoid*)12);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model_->IBO);
-
-		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0); //draw in 1 pass TODO draw in multiple pass
 		
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
+		if (!model_) {
+			LOG(ERROR) << "Called render with invalid model";
+			throw std::exception("Invalid model");
+		}
+			
+		for (const auto& drawable : *model_) {
+			math::Pipeline p;
+			p.Rotate(rotation_.x, rotation_.y, rotation_.z);
+			p.WorldPos(position_.x, position_.y, position_.z);
+			p.SetPerspectiveProj(75.0f, viewport_w, viewport_h, 1.0f, 10000.0f);
+
+			glUniformMatrix4fv(uworld_, 1, GL_TRUE, (const GLfloat*)p.GetWorldTrans().m);
+
+			glEnableVertexAttribArray(0);
+			glEnableVertexAttribArray(1);
+			glBindBuffer(GL_ARRAY_BUFFER, drawable->getVertexBuffer());
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(math::Vertex), 0);
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(math::Vertex), (const GLvoid*)12);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable->getIndexBuffer());
+
+			glDrawElements(GL_TRIANGLES, drawable->getIndexCount(), GL_UNSIGNED_INT, 0); 
+
+			glDisableVertexAttribArray(0);
+			glDisableVertexAttribArray(1);
+		}
 	}
 
 }

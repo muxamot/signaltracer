@@ -1,6 +1,4 @@
-#include <gl/glew.h>
-#include <glut.h>
-
+#include "opengl.hpp"
 #include "window.hpp"
 #include "logger.hpp"
 

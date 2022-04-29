@@ -134,9 +134,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="actions.cpp" />
+    <ClCompile Include="importer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix.cpp" />
-    <ClCompile Include="model.cpp" />
+    <ClCompile Include="mesh.cpp" />
     <ClCompile Include="quaternion.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="shaders.cpp" />
@@ -145,9 +146,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="actions.hpp" />
+    <ClInclude Include="drawable_interface.hpp" />
+    <ClInclude Include="importer.hpp" />
     <ClInclude Include="logger.hpp" />
     <ClInclude Include="matrix.hpp" />
-    <ClInclude Include="model.hpp" />
+    <ClInclude Include="mesh.hpp" />
+    <ClInclude Include="opengl.hpp" />
     <ClInclude Include="pipeline.hpp" />
     <ClInclude Include="quaternion.hpp" />
     <ClInclude Include="renderer.hpp" />

@@ -3,8 +3,8 @@
 #include <functional>
 
 #include <SDL.h>
-#include <glut.h>
 
+#include "opengl.hpp"
 #include "types.hpp"
 #include "actions.hpp"
 

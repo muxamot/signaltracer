@@ -2,6 +2,7 @@
 
 #include <assimp/BaseImporter.h>
 
+#include "importer.hpp"
 #include "window.hpp"
 #include "renderer.hpp"
 
@@ -17,12 +18,13 @@ int main(int argc, char** argv)
 	try {
 		auto renderer = std::make_shared<Renderer>();
 		auto actions = std::make_shared<ActionsController>(renderer);
-		auto window = std::make_shared<Window>(sgtr::WindowDescriptor{ [renderer]() { renderer->render(width, height); }, 
-																	   [actions](UserAction act) { actions->onAction(act); }, 
-																	   width, 
-																	   height });
+		auto window = std::make_shared<Window>(WindowDescriptor{ [renderer]() { renderer->render(width, height); }, 
+												  			     [actions](UserAction act) { actions->onAction(act); }, 
+															     width, 
+																 height });
+		auto importer = std::make_shared<Importer>("test.dxf");
 
-		renderer->init();
+		renderer->init(importer->getGeometry());
 
 		LOG(INFO) << "Entering display loop";
 		return window->display();

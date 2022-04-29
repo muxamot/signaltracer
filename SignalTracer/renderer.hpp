@@ -1,7 +1,7 @@
 #pragma once
 
 #include "types.hpp"
-#include "model.hpp"
+#include "drawable_interface.hpp"
 #include "shaders.hpp"
 #include "vector.hpp"
 
@@ -21,7 +21,7 @@ namespace sgtr
 	public:
 		Renderer() = default;
 
-		void init();
+		void init(sptr<Model>);
 		void render(unsigned viewport_w, unsigned viewport_h);
 
 		void applyPositionDelta(const math::Vector3f&);
