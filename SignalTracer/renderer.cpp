@@ -20,7 +20,7 @@ namespace sgtr {
 		rotation_ += delta;
 	}
 
-	void Renderer::init(sptr<Model> model)
+	void Renderer::init(sptr<Model> model, bool left_handed)
 	{
 		GLenum res = glewInit();
 		if (res != GLEW_OK) {
@@ -31,6 +31,7 @@ namespace sgtr {
 		model_ = std::move(model);
 		shaders_ = std::make_shared<Shaders>();
 		uworld_ = shaders_->setUniform("gWorld");
+		left_handed_ = left_handed;
 
 		LOG(INFO) << "Render initialized";
 	}
@@ -47,7 +48,7 @@ namespace sgtr {
 			
 		for (const auto& drawable : *model_) {
 			math::Pipeline p;
-			p.Rotate(rotation_.x, rotation_.y, rotation_.z);
+			p.Rotate((left_handed_) ? 90 + rotation_.x : rotation_.x, rotation_.y, rotation_.z);
 			p.WorldPos(position_.x, position_.y, position_.z);
 			p.SetPerspectiveProj(75.0f, viewport_w, viewport_h, 1.0f, 10000.0f);
 

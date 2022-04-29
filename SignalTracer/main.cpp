@@ -22,7 +22,8 @@ int main(int argc, char** argv)
 												  			     [actions](UserAction act) { actions->onAction(act); }, 
 															     width, 
 																 height });
-		auto importer = std::make_shared<Importer>("test.dxf");
+
+		auto importer = std::make_shared<Importer>("test_meshes\\house.fbx");
 
 		renderer->init(importer->getGeometry());
 

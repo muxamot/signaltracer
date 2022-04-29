@@ -10,6 +10,8 @@ namespace sgtr
 	class Renderer
 	{
 	private:
+		bool left_handed_{true};
+
 		sptr<Model> model_;
 		sptr<Shaders> shaders_;
 
@@ -21,7 +23,7 @@ namespace sgtr
 	public:
 		Renderer() = default;
 
-		void init(sptr<Model>);
+		void init(sptr<Model>, bool = true);
 		void render(unsigned viewport_w, unsigned viewport_h);
 
 		void applyPositionDelta(const math::Vector3f&);

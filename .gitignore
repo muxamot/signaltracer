@@ -5,3 +5,4 @@ SignalTracer/Debug/*
 SignalTracer/Release/*
 SignalTracer/x64/*
 SignalTracer/*.user
+SignalTracer/test_meshes

@@ -16,6 +16,7 @@ namespace sgtr
 	Importer::Importer(const std::string& filename)
 	{
 		LOG(INFO) << "Import path = " << filename;
+		LOG(INFO) << "Trying to import file (this may take some time......)";
 
 		Assimp::Importer importer;
 		const auto* scene = importer.ReadFile(filename.c_str(), 
@@ -26,6 +27,8 @@ namespace sgtr
 			LOG(ERROR) << "Importer says: " << importer.GetErrorString();
 			throw std::exception("Failed to import model");
 		}
+
+		LOG(INFO) << "Loading geometry (this may take some time......)";
 
 		const auto msize = scene->mNumMeshes;
 		model_ = std::make_shared<Model>();
@@ -59,8 +62,8 @@ namespace sgtr
 			const auto& face = mesh->mFaces[i];
 			
 			assert(face.mNumIndices == 3);
-			for(unsigned j = 2; j >= 0; --j)
-				indexes.push_back(face.mIndices[i]);
+			for(int j = 2; j >= 0; --j)
+				indexes.push_back(face.mIndices[j]);
 		}
 
 		for (auto& vertex : vertices)
