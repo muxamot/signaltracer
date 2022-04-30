@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="actions.cpp" />
+    <ClCompile Include="cutting_plane.cpp" />
     <ClCompile Include="importer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix.cpp" />
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="actions.hpp" />
+    <ClInclude Include="cutting_plane.hpp" />
     <ClInclude Include="drawable_interface.hpp" />
     <ClInclude Include="importer.hpp" />
     <ClInclude Include="logger.hpp" />

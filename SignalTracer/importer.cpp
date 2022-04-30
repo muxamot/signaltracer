@@ -41,7 +41,7 @@ namespace sgtr
 			return generate_node(scene->mMeshes[mnum++]);
 		});
 
-		LOG(INFO) << "Imported " << msize << " meshes from model " << scene->GetShortFilename;
+		LOG(INFO) << "Imported " << msize << " meshes from model";
 	}
 
 	sptr<IDrawable> Importer::generate_node(const aiMesh* mesh)

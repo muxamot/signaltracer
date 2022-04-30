@@ -10,7 +10,7 @@ namespace math
 		Vector2f m_tex;
 
 		Vertex() = default;
-		Vertex(Vector3f pos, Vector2f tex)
+		explicit Vertex(Vector3f pos, Vector2f tex)
 			: m_pos(pos), m_tex(tex) {}
 	};
 

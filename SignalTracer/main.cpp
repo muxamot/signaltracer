@@ -5,6 +5,7 @@
 #include "importer.hpp"
 #include "window.hpp"
 #include "renderer.hpp"
+#include "cutting_plane.hpp"
 
 #include "logger.hpp"
 
@@ -25,7 +26,7 @@ int main(int argc, char** argv)
 
 		auto importer = std::make_shared<Importer>("test_meshes\\house.fbx");
 
-		renderer->init(importer->getGeometry());
+		renderer->init(importer->getGeometry(), std::make_shared<ÑuttingPlane>(9.99f, 9.99f));
 
 		LOG(INFO) << "Entering display loop";
 		return window->display();

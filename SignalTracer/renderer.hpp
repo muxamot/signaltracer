@@ -14,16 +14,19 @@ namespace sgtr
 
 		sptr<Model> model_;
 		sptr<Shaders> shaders_;
+		sptr<IDrawable> cplane_;
 
 		GLuint uworld_;
 
 		math::Vector3f position_;
 		math::Vector3f rotation_;
 
+		void renderDrawable(sptr<IDrawable>);
+
 	public:
 		Renderer() = default;
 
-		void init(sptr<Model>, bool = true);
+		void init(sptr<Model>, sptr<IDrawable>, bool = true);
 		void render(unsigned viewport_w, unsigned viewport_h);
 
 		void applyPositionDelta(const math::Vector3f&);
