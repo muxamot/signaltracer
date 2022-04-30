@@ -4,8 +4,8 @@
 
 namespace sgtr
 {
-	ActionsController::ActionsController(sptr<Renderer> render)
-		: renderer_(std::move(render)) {}
+	ActionsController::ActionsController(sptr<Renderer> render, sptr<ÑuttingPlane> cplane)
+		: renderer_(std::move(render)), cplane_(std::move(cplane)) {}
 
 	void ActionsController::onMouseMove(const math::Vector2i& delta)
 	{
@@ -23,6 +23,8 @@ namespace sgtr
 			case Action::FORWARD: renderer_->applyPositionDelta(math::Vector3f{ 0.0f, 0.0f, (act.coeficient_ * WHEEL_SENSITIVITY) * -POSITION_SENSITIVITY }); break;
 			case Action::BACKWARD: renderer_->applyPositionDelta(math::Vector3f{ 0.0f, 0.0f, (act.coeficient_ * WHEEL_SENSITIVITY) * POSITION_SENSITIVITY, }); break;
 			case Action::ROLL: onMouseMove(act.delta_); break;
+			case Action::CPLANE_CLIMB: cplane_->applyOffsetDelta(-CPLANE_SENSITIVITY); break;
+			case Action::CPLANE_DESCEND: cplane_->applyOffsetDelta(CPLANE_SENSITIVITY); break;
 
 		default:
 			LOG(WARN) << "Undefined user action!";

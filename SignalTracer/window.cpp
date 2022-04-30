@@ -68,12 +68,15 @@ namespace sgtr {
 		Action act;
 		switch (kcode)
 		{
+			//keys mapping
 			case SDLK_UP: act = Action::UP; break;
 			case SDLK_DOWN: act = Action::DOWN; break;
 			case SDLK_LEFT: act = Action::LEFT; break;
 			case SDLK_RIGHT: act = Action::RIGHT; break;
 			case SDLK_w: act = Action::FORWARD; break;
 			case SDLK_s: act = Action::BACKWARD; break;
+			case SDLK_q: act = Action::CPLANE_CLIMB; break;
+			case SDLK_a: act = Action::CPLANE_DESCEND; break;
 
 			default:
 				LOG(WARN) << "No handler for this button, try another!";

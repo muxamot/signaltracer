@@ -1,24 +1,36 @@
 #pragma once
 
+#include <array>
+
 #include "drawable_interface.hpp"
+#include "vertex.hpp"
 
 namespace sgtr
 {
 	class ÑuttingPlane : public IDrawable
 	{
+		constexpr static size_t VERTEX_COUNT{ 4 };
+		constexpr static size_t INDEX_COUNT{ 6 };
+
+		constexpr static std::array<unsigned int, INDEX_COUNT> index_ = { 3, 0, 1, 1, 2, 3 };
+		std::array<math::Vertex, VERTEX_COUNT> vertex_;
+
 		float offset_{ 0.0 };
-		constexpr static size_t index_count_{6};
+		float wx_, wy_;
 		GLuint vb_;
 		GLuint ib_;
 		
-		void createVB(float, float);
+		void updateVertices();
+		void createVB();
+		void updateVB();
 		void createIB();
 
 	public:
 		ÑuttingPlane(float, float);
 		~ÑuttingPlane() override = default;
 		
-		void offsetTransform(float);
+		void createPlane();
+		void applyOffsetDelta(float);
 
 		size_t getIndexCount() const override;
 		GLuint getIndexBuffer() const override;

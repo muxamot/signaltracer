@@ -2,7 +2,6 @@
 
 #include "opengl.hpp"
 #include "renderer.hpp"
-#include "pipeline.hpp"
 #include "vertex.hpp"
 #include "logger.hpp"
 
@@ -50,14 +49,14 @@ namespace sgtr {
 		math::Pipeline p;
 		p.Rotate((left_handed_) ? 90 + rotation_.x : rotation_.x, rotation_.y, rotation_.z);
 		p.WorldPos(position_.x, position_.y, position_.z);
-		p.SetPerspectiveProj(75.0f, viewport_w, viewport_h, 1.0f, 10000.0f);
+		p.SetPerspectiveProj(75.0f, viewport_w, viewport_h, 0.1f, 10000.0f);
 
 		glUniformMatrix4fv(uworld_, 1, GL_TRUE, (const GLfloat*)p.GetWorldTrans().m);
 
 		for (const auto& drawable : *model_)
 			renderDrawable(drawable);
 
-		renderDrawable(cplane_);
+		renderCPlane(viewport_w, viewport_h);
 	}
 
 	void Renderer::renderDrawable(sptr<IDrawable> drawable)
@@ -73,6 +72,17 @@ namespace sgtr {
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
+	}
+
+	void Renderer::renderCPlane(unsigned vw, unsigned vh)
+	{
+		math::Pipeline p;
+		p.Rotate((left_handed_) ? 90 + rotation_.x : rotation_.x, rotation_.y, rotation_.z);
+		p.WorldPos(position_.x, position_.y, position_.z + cplane_offset_);
+		p.SetPerspectiveProj(75.0f, vw, vh, 0.1f, 10000.0f);
+		glUniformMatrix4fv(uworld_, 1, GL_TRUE, (const GLfloat*)p.GetWorldTrans().m);
+
+		renderDrawable(cplane_);
 	}
 
 }

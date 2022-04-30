@@ -18,15 +18,17 @@ int main(int argc, char** argv)
 {
 	try {
 		auto renderer = std::make_shared<Renderer>();
-		auto actions = std::make_shared<ActionsController>(renderer);
+		auto plane = std::make_shared<ÑuttingPlane>(10.0f, 10.0f);
+		auto actions = std::make_shared<ActionsController>(renderer, plane);
 		auto window = std::make_shared<Window>(WindowDescriptor{ [renderer]() { renderer->render(width, height); }, 
 												  			     [actions](UserAction act) { actions->onAction(act); }, 
 															     width, 
 																 height });
 
-		auto importer = std::make_shared<Importer>("test_meshes\\house.fbx");
+		auto importer = std::make_shared<Importer>("test_meshes\\floorhouse.fbx");
 
-		renderer->init(importer->getGeometry(), std::make_shared<ÑuttingPlane>(9.99f, 9.99f));
+		plane->createPlane();
+		renderer->init(importer->getGeometry(), std::move(plane));
 
 		LOG(INFO) << "Entering display loop";
 		return window->display();
