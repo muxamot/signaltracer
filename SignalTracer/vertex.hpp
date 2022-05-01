@@ -6,12 +6,14 @@ namespace math
 {
 	struct Vertex
 	{
-		Vector3f m_pos;
-		Vector2f m_tex;
+		Vector3f vertex_position_;
+		Vector2f texture_postition_;
 
 		Vertex() = default;
 		explicit Vertex(Vector3f pos, Vector2f tex)
-			: m_pos(pos), m_tex(tex) {}
+			: vertex_position_(pos), texture_postition_(tex) 
+		{
+		}
 	};
 
 }

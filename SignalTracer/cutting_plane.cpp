@@ -24,14 +24,12 @@ namespace sgtr {
 	void ÑuttingPlane::updateVertices()
 	{
 		using namespace math;
-
 		vertex_ = {
-			Vertex{Vector3f{ wx_, wy_, offset_ }, {}},
-			Vertex{Vector3f{ wx_, -wy_, offset_ }, {}},
-			Vertex{Vector3f{ -wx_, -wy_, offset_ }, {}},
-			Vertex{Vector3f{ -wx_, wy_,  offset_ }, {}}
+			Vertex{ Vector3f{ wx_, wy_, offset_ }, Vector2f{ 1.0f, 1.0f } },
+			Vertex{ Vector3f{ wx_, -wy_, offset_ }, Vector2f{ 1.0f, 0.0f } },
+			Vertex{ Vector3f{ -wx_, -wy_, offset_ }, Vector2f{ 0.0f, 0.0f } },
+			Vertex{ Vector3f{ -wx_, wy_,  offset_ }, Vector2f{ 0.0f, 1.0f } }
 		};
-
 	}
 
 	void ÑuttingPlane::createVB()

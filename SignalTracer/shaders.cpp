@@ -123,7 +123,7 @@ namespace sgtr {
 		glUseProgram(pshader_);
 	}
 
-	GLuint Shaders::setUniform(const std::string & name)
+	GLuint Shaders::setUniform(const std::string& name)
 	{
 		GLuint loc = glGetUniformLocation(pshader_, name.c_str());
 

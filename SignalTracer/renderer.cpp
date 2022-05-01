@@ -19,7 +19,12 @@ namespace sgtr {
 		rotation_ += delta;
 	}
 
-	void Renderer::init(sptr<Model> model, sptr<IDrawable> cplane, bool left_handed)
+	GLuint Renderer::getUniformAddr(const std::string & name) const
+	{
+		return shaders_->setUniform(name);
+	}
+
+	void Renderer::init(sptr<Model> model, sptr<IDrawable> cplane, sptr<Heatmap> hmap, bool left_handed)
 	{
 		GLenum res = glewInit();
 		if (res != GLEW_OK) {
@@ -27,10 +32,14 @@ namespace sgtr {
 			throw std::exception("Render initialization failed");
 		}
 
+		shaders_ = std::make_shared<Shaders>();
 		model_ = std::move(model);
 		cplane_ = std::move(cplane);
-		shaders_ = std::make_shared<Shaders>();
-		uworld_ = shaders_->setUniform("gWorld");
+		hmap_ = std::move(hmap);
+
+		uworld_ = getUniformAddr("gWorld");
+		hmap_->setSampler(getUniformAddr("Sampler0"));
+		usampler_ = getUniformAddr("SamplingEnabled");
 		left_handed_ = left_handed;
 
 		LOG(INFO) << "Render initialized";
@@ -52,6 +61,7 @@ namespace sgtr {
 		p.SetPerspectiveProj(75.0f, viewport_w, viewport_h, 0.1f, 10000.0f);
 
 		glUniformMatrix4fv(uworld_, 1, GL_TRUE, (const GLfloat*)p.GetWorldTrans().m);
+		glUniform1i(usampler_, 0);
 
 		for (const auto& drawable : *model_)
 			renderDrawable(drawable);
@@ -63,12 +73,18 @@ namespace sgtr {
 	{
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
+
+		// passing vertex buffer
 		glBindBuffer(GL_ARRAY_BUFFER, drawable->getVertexBuffer());
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(math::Vertex), 0);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(math::Vertex), (const GLvoid*)12);
+
+		// layout in vertex attrib array - 3 floats (12 bytes) vertex coords, 2 float texture coords 
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, STRIDE_SIZE, (const GLvoid*)VERTEX_COORDS_OFFSET);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, STRIDE_SIZE, (const GLvoid*)TEXTURE_COORDS_OFFSET);
+		
+		// passing index buffer
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawable->getIndexBuffer());
 
-		glDrawElements(GL_TRIANGLES, drawable->getIndexCount(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(drawable->getIndexCount()), GL_UNSIGNED_INT, 0);
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -80,7 +96,11 @@ namespace sgtr {
 		p.Rotate((left_handed_) ? 90 + rotation_.x : rotation_.x, rotation_.y, rotation_.z);
 		p.WorldPos(position_.x, position_.y, position_.z + cplane_offset_);
 		p.SetPerspectiveProj(75.0f, vw, vh, 0.1f, 10000.0f);
+
 		glUniformMatrix4fv(uworld_, 1, GL_TRUE, (const GLfloat*)p.GetWorldTrans().m);
+		glUniform1i(usampler_, 1);
+
+		hmap_->bind(GL_TEXTURE0);
 
 		renderDrawable(cplane_);
 	}

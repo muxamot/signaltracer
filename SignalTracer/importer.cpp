@@ -68,8 +68,9 @@ namespace sgtr
 
 		for (auto& vertex : vertices)
 		{
-			aiVector3t<float> rs = root_transform_matrix_ * aiVector3t<float>(vertex.m_pos.x, vertex.m_pos.y, vertex.m_pos.z);
-			vertex.m_pos = Vector3f{ rs.x, rs.y, rs.z };
+			aiVector3t<float> rs = root_transform_matrix_ 
+					* aiVector3t<float>(vertex.vertex_position_.x, vertex.vertex_position_.y, vertex.vertex_position_.z);
+			vertex.vertex_position_ = Vector3f{ rs.x, rs.y, rs.z };
 		}
 
 		return std::make_shared<Mesh>(vertices, indexes);

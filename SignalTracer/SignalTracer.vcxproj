@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="actions.cpp" />
     <ClCompile Include="cutting_plane.cpp" />
+    <ClCompile Include="heatmap.cpp" />
     <ClCompile Include="importer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="actions.hpp" />
     <ClInclude Include="cutting_plane.hpp" />
     <ClInclude Include="drawable_interface.hpp" />
+    <ClInclude Include="heatmap.hpp" />
     <ClInclude Include="importer.hpp" />
     <ClInclude Include="logger.hpp" />
     <ClInclude Include="matrix.hpp" />

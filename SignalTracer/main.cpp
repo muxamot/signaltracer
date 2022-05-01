@@ -6,11 +6,12 @@
 #include "window.hpp"
 #include "renderer.hpp"
 #include "cutting_plane.hpp"
+#include "heatmap.hpp"
 
 #include "logger.hpp"
 
-const int width = 1280; // ширина окна
-const int height = 768; // высота окна
+const int width = 1280;
+const int height = 768;
 
 using namespace sgtr;
 
@@ -26,9 +27,10 @@ int main(int argc, char** argv)
 																 height });
 
 		auto importer = std::make_shared<Importer>("test_meshes\\floorhouse.fbx");
+		auto heatmap = std::make_shared<Heatmap>(100, 100);
 
 		plane->createPlane();
-		renderer->init(importer->getGeometry(), std::move(plane));
+		renderer->init(importer->getGeometry(), std::move(plane), std::move(heatmap));
 
 		LOG(INFO) << "Entering display loop";
 		return window->display();
