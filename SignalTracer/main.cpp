@@ -19,7 +19,7 @@ int main(int argc, char** argv)
 {
 	try {
 		auto renderer = std::make_shared<Renderer>();
-		auto plane = std::make_shared<ÑuttingPlane>(10.0f, 10.0f);
+		auto plane = std::make_shared<ÑuttingPlane>(32.0f, 32.0f);
 		auto actions = std::make_shared<ActionsController>(renderer, plane);
 		auto window = std::make_shared<Window>(WindowDescriptor{ [renderer]() { renderer->render(width, height); }, 
 												  			     [actions](UserAction act) { actions->onAction(act); }, 

@@ -34,8 +34,9 @@ namespace sgtr {
 	public:
 		Heatmap(unsigned, unsigned);
 	
-		Pixel* at(size_t, size_t);
+		Pixel& at(size_t, size_t);
 		void bind(GLenum);
 		void setSampler(GLuint);
+		void applyChanges();
 	};
 }
