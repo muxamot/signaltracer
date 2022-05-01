@@ -6,6 +6,7 @@
 #include "pipeline.hpp"
 #include "vertex.hpp"
 #include "heatmap.hpp"
+#include "model.hpp"
 
 namespace sgtr
 {

@@ -7,7 +7,7 @@
 
 namespace sgtr {
 	
-	Mesh::Mesh(const std::vector<math::Vertex>& vertices, const std::vector<unsigned int>& indexes)
+	Mesh::Mesh(const vertex_buf_t& vertices, const index_buf_t& indexes)
 	{
 		index_count_ = indexes.size();
 		glGenBuffers(1, &vbo_);

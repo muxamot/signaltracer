@@ -25,18 +25,19 @@ namespace sgtr {
 		unsigned width_;
 		unsigned height_;
 		heatmap_buf_t buffer_;
-		math::Vector2f planeSpaceNearest(size_t, size_t);
 		
 		GLuint txo_;
 		void generateTXObject();
 		void updateTXObject();
+		Pixel& at(size_t, size_t);
 
 	public:
 		Heatmap(unsigned, unsigned);
 	
-		Pixel& at(size_t, size_t);
+		void setLevelAt(float, size_t, size_t);
 		void bind(GLenum);
 		void setSampler(GLuint);
 		void applyChanges();
+		math::Vector2ui getResolution();
 	};
 }

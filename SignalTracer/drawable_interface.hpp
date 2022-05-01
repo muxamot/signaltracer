@@ -1,9 +1,6 @@
 #pragma once
 
-#include <vector>
-
 #include "opengl.hpp"
-#include "types.hpp"
 
 namespace sgtr 
 {
@@ -16,6 +13,4 @@ namespace sgtr
 		virtual GLuint getIndexBuffer() const = 0;
 		virtual GLuint getVertexBuffer() const = 0;
 	};
-
-	using Model = std::vector<sptr<IDrawable>>;
 }

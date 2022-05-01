@@ -74,7 +74,7 @@
     <LibraryPath>$(SolutionDir)..\library\SDL2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)..\library\glew\glew-2.1.0\include;$(SolutionDir)..\library\GLUT\include;$(SolutionDir)..\library\SDL2\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\library\glew\glew-2.1.0\include;$(SolutionDir)..\library\GLUT\include;$(SolutionDir)..\library\SDL2\include;$(SolutionDir)..\library\glm;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)..\library\glew\glew-2.1.0\lib\Release\x64;$(SolutionDir)..\library\GLUT\lib;$(SolutionDir)..\library\SDL2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -140,7 +140,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix.cpp" />
     <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="model.cpp" />
     <ClCompile Include="quaternion.cpp" />
+    <ClCompile Include="raycast.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="shaders.cpp" />
     <ClCompile Include="vector.cpp" />
@@ -155,9 +157,11 @@
     <ClInclude Include="logger.hpp" />
     <ClInclude Include="matrix.hpp" />
     <ClInclude Include="mesh.hpp" />
+    <ClInclude Include="model.hpp" />
     <ClInclude Include="opengl.hpp" />
     <ClInclude Include="pipeline.hpp" />
     <ClInclude Include="quaternion.hpp" />
+    <ClInclude Include="raycast.hpp" />
     <ClInclude Include="renderer.hpp" />
     <ClInclude Include="shaders.hpp" />
     <ClInclude Include="types.hpp" />

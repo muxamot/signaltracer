@@ -31,6 +31,7 @@ namespace sgtr
 		
 		void createPlane();
 		void applyOffsetDelta(float);
+		float offset() const;
 
 		size_t getIndexCount() const override;
 		GLuint getIndexBuffer() const override;

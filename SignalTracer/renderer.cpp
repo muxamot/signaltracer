@@ -63,7 +63,7 @@ namespace sgtr {
 		glUniformMatrix4fv(uworld_, 1, GL_TRUE, (const GLfloat*)p.GetWorldTrans().m);
 		glUniform1i(usampler_, 0);
 
-		for (const auto& drawable : *model_)
+		for (const auto& drawable : model_->getDrawableItems())
 			renderDrawable(drawable);
 
 		renderCPlane(viewport_w, viewport_h);

@@ -21,6 +21,11 @@ namespace sgtr {
 		updateVB();
 	}
 
+	float ÑuttingPlane::offset() const
+	{
+		return offset_;
+	}
+
 	void ÑuttingPlane::updateVertices()
 	{
 		using namespace math;

@@ -39,9 +39,35 @@ namespace sgtr
 		updateTXObject();
 	}
 
+	math::Vector2ui Heatmap::getResolution()
+	{
+		return math::Vector2ui{ width_, height_ };
+	}
+
 	Pixel& Heatmap::at(size_t x, size_t y)
 	{
 		return buffer_.at(x * width_ + y);
+	}
+
+	void Heatmap::setLevelAt(float normalized_level, size_t x, size_t y)
+	{
+		// blue zone
+		if (normalized_level <= 0.1) { at(x, y) = { 3, 1, 140 }; return; }
+		if (normalized_level <= 0.2) { at(x, y) = { 66, 89, 195 }; return; }
+		if (normalized_level <= 0.3) { at(x, y) = { 158, 194, 255 }; return; }
+
+		//green zone 
+		if (normalized_level <= 0.4) { at(x, y) = { 0, 128, 2 }; return; }
+		if (normalized_level <= 0.5) { at(x, y) = { 118, 219, 115 }; return; }
+		if (normalized_level <= 0.6) { at(x, y) = { 198, 255, 202 }; return; }
+
+		//yellow zone 
+		if (normalized_level <= 0.7) { at(x, y) = { 255, 201, 3 }; return; }
+		if (normalized_level <= 0.8) { at(x, y) = { 255, 233, 97 }; return; }
+		if (normalized_level <= 0.9) { at(x, y) = { 255, 255, 159 }; return; }
+
+		//red zone
+		at(x, y) = { 255, 0, 0 };
 	}
 
 	void Heatmap::bind(GLenum unit)

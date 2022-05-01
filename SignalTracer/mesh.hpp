@@ -1,9 +1,7 @@
 #pragma once
 
-#include <vector>
-
 #include "drawable_interface.hpp"
-#include "vertex.hpp"
+#include "types.hpp"
 
 namespace sgtr
 {
@@ -15,7 +13,7 @@ namespace sgtr
 		size_t index_count_{0};
 		
 	public:
-		explicit Mesh(const std::vector<math::Vertex>&, const std::vector<unsigned int>&);
+		explicit Mesh(const vertex_buf_t&, const index_buf_t&);
 		~Mesh() override;
 		
 		size_t getIndexCount() const override;

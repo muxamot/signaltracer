@@ -11,11 +11,16 @@
 
 namespace math
 {
-
 	struct Vector2i
 	{
 		int x{0};
 		int y{0};
+	};
+
+	struct Vector2ui
+	{
+		unsigned x{ 0 };
+		unsigned y{ 0 };
 	};
 
 	struct Vector2f

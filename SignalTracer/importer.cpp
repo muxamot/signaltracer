@@ -10,6 +10,7 @@
 #include "vertex.hpp"
 #include "vector.hpp"
 #include "mesh.hpp"
+#include "model.hpp"
 
 namespace sgtr
 {
@@ -31,25 +32,25 @@ namespace sgtr
 		LOG(INFO) << "Loading geometry (this may take some time......)";
 
 		const auto msize = scene->mNumMeshes;
-		model_ = std::make_shared<Model>();
-		model_->reserve(msize);
-
+		model_ = std::make_shared<Model>(msize);
+		
 		const auto* root_node = scene->mRootNode;
 		root_transform_matrix_ = root_node->mTransformation;
 
-		std::generate_n(std::back_inserter(*model_), msize, [&, mnum = 0]() mutable {
-			return generate_node(scene->mMeshes[mnum++]);
-		});
+		for (unsigned mnum = 0; mnum < msize; mnum++) {
+			auto node = generate_node(scene->mMeshes[mnum++]);
+			model_->add(std::move(node.first), std::move(node.second));
+		}
 
 		LOG(INFO) << "Imported " << msize << " meshes from model";
 	}
 
-	sptr<IDrawable> Importer::generate_node(const aiMesh* mesh)
+	Importer::node_t Importer::generate_node(const aiMesh* mesh)
 	{
 		using namespace math;
 
-		std::vector<Vertex> vertices;
-		std::vector<unsigned int> indexes;
+		vertex_buf_t vertices;
+		index_buf_t indexes;
 	
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 		{
@@ -73,7 +74,8 @@ namespace sgtr
 			vertex.vertex_position_ = Vector3f{ rs.x, rs.y, rs.z };
 		}
 
-		return std::make_shared<Mesh>(vertices, indexes);
+		LOG(INFO) << "Mesh contains " << indexes.size() / 3 << " triangles";
+		return std::make_pair(std::make_shared<Mesh>(vertices, indexes), GeometryData{ vertices, indexes });
 	}
 
 	sptr<Model> Importer::getGeometry()
