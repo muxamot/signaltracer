@@ -23,7 +23,7 @@ namespace sgtr {
 		LOG(INFO) << "Threads used for computation = " << threads_count_;
 	}
 
-	// Muller-Trumbore intersection detection algorithm
+	// Moller-Trumbore intersection detection algorithm
 	float Raycast::ray_intersection(const math::Vector3f& origin, const math::Vector3f& direction, 
 		const math::Vector3f& vertex0, const math::Vector3f& vertex1, const math::Vector3f& vertex2) const
 	{
@@ -45,23 +45,45 @@ namespace sgtr {
 			return 0;
 		}
 
-		float inv_det = 1 / det;
+		const float inv_det = 1.0f / det;
 		vec3 tvec = orig - v0;
-		float u = dot(tvec, pvec) * inv_det;
-		if (u < 0 || u > 1)
+		const float u = dot(tvec, pvec) * inv_det;
+
+		if (u < 0.0f || u > 1.0f)
 			return 0;
 
 		vec3 qvec = cross(tvec, e1);
-		float v = dot(dir, qvec) * inv_det;
-		if (v < 0 || u + v > 1)
+		const float v = dot(dir, qvec) * inv_det;
+		if (v < 0.0f || u + v > 1.0f)
 			return 0;
 
-		float f = dot(e2, qvec) * inv_det;
-		if (f > 0.001) {
-			f -= 0.001;
+		const float f = dot(e2, qvec) * inv_det;
+		if (f > DETECTION_PRECISION) {
+			const auto point = (orig + dir * f);
+			return glm::length(point - orig);
+		} else {
+			return 0;
 		}
+	}
 
-		return dot(e2, qvec) * inv_det;
+	void Raycast::iterateGeometry(geometry_iter_cb_t callback)
+	{
+		for (auto& geometry : model_->getGeometryItems())
+		{
+			if (geometry.index_buffer_.size() % 3 != 0)
+			{
+				LOG(ERROR) << "Mesh geometry index buffer is invalid, aborting";
+				throw std::exception("Index buffer is invalid");
+			}
+
+			for (unsigned i = 0; i < geometry.index_buffer_.size(); i += 3)
+			{
+				if (!callback(std::make_tuple(&geometry.vertex_buffer_.at(geometry.index_buffer_.at(i))
+					, &geometry.vertex_buffer_.at(geometry.index_buffer_.at(i + 1))  
+					, &geometry.vertex_buffer_.at(geometry.index_buffer_.at(i + 2)))))
+					return;
+			}
+		}
 	}
 
 	math::Vector2f Raycast::fromMapToPlaneSpace(const math::Vector2ui& point) const
@@ -85,25 +107,12 @@ namespace sgtr {
 		float proj_distance = std::sqrt(std::powf(destination.x - source_.x, 2.0f)
 			+ std::powf(destination.y - source_.y, 2.0f) + std::powf(destination.z - source_.z, 2.0f));
 
-		for (auto& geometry : model_->getGeometryItems())
-		{
-			if (geometry.index_buffer_.size() % 3 != 0)
-			{
-				LOG(ERROR) << "Mesh geometry index buffer is invalid, aborting";
-				throw std::exception("Index buffer is invalid");
-			}
+		for(const auto& triangle : filtered_triangles_) {
+			float dist = ray_intersection(source_, destination, std::get<0>(triangle)->vertex_position_, 
+				std::get<1>(triangle)->vertex_position_, std::get<2>(triangle)->vertex_position_);
 
-			for (unsigned i = 0; i < geometry.index_buffer_.size(); i += 3)
-			{
-				const auto& vx0 = geometry.vertex_buffer_.at(geometry.index_buffer_.at(i));
-				const auto& vx1 = geometry.vertex_buffer_.at(geometry.index_buffer_.at(i + 1));
-				const auto& vx2 = geometry.vertex_buffer_.at(geometry.index_buffer_.at(i + 2));
-
-				float dist = ray_intersection(source_, destination, vx0.vertex_position_, vx1.vertex_position_, vx2.vertex_position_);
-
-				if (dist > DETECTION_PRECISION && dist < proj_distance)
-					hits.push_back(dist);
-			}
+			if (dist > DETECTION_PRECISION && dist < proj_distance)
+				hits.push_back(dist);
 		}
 
 		std::sort(hits.begin(), hits.end());
@@ -120,7 +129,16 @@ namespace sgtr {
 	void Raycast::updateMap(float offset)
 	{
 		offset_ = offset;
-		
+		filtered_triangles_.clear();
+
+		// drop unreachable triangles
+		iterateGeometry([&](triangle_vxset_t v) -> bool {
+			if (std::get<0>(v)->vertex_position_.z > offset_ || std::get<1>(v)->vertex_position_.z > offset_ 
+						|| std::get<2>(v)->vertex_position_.z > offset_)
+				filtered_triangles_.push_back(v);
+			return true;
+		});
+
 		auto stripe = resolution_.x / threads_count_;
 
 		threads_.clear();

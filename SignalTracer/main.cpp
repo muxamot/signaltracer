@@ -19,8 +19,8 @@ using namespace sgtr;
 int main(int argc, char** argv)
 {
 	try {
-		auto cplane_x = 48.0f;
-		auto cplane_y = 48.0f;
+		auto cplane_x = 24.0f;
+		auto cplane_y = 24.0f;
 
 		auto renderer = std::make_shared<Renderer>();
 		auto plane = std::make_shared<ÑuttingPlane>(cplane_x, cplane_y);
@@ -30,9 +30,9 @@ int main(int argc, char** argv)
 															     width, 
 																 height });
 
-		auto importer = std::make_shared<Importer>("test_meshes\\exported_2013.fbx");
+		auto importer = std::make_shared<Importer>("test_meshes\\house.fbx");
 		auto model = importer->getGeometry();
-		auto heatmap = std::make_shared<Heatmap>(256, 256);
+		auto heatmap = std::make_shared<Heatmap>(64, 64);
 		auto raycast = std::make_shared<Raycast>(model, heatmap, math::Vector3f{ 0.0f, 0.0f, 6.0f }, math::Vector2f{ cplane_x, cplane_y });
 
 		plane->createPlane();
