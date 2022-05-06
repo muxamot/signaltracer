@@ -38,7 +38,7 @@ namespace sgtr
 		constexpr static float POSITION_SENSITIVITY = 0.3f;
 		constexpr static float ROTATION_SENSITIVITY = 0.5f;
 		constexpr static float WHEEL_SENSITIVITY = 2.5f;
-		constexpr static float CPLANE_SENSITIVITY = 2.5f; //0.05f;
+		constexpr static float CPLANE_SENSITIVITY = 0.5f; //0.05f;
 
 		sptr<Renderer> renderer_;
 		sptr<ÑuttingPlane> cplane_;

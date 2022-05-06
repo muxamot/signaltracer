@@ -24,7 +24,7 @@ namespace sgtr {
 		return shaders_->setUniform(name);
 	}
 
-	void Renderer::init(sptr<Model> model, sptr<IDrawable> cplane, sptr<Heatmap> hmap, bool left_handed)
+	void Renderer::init(sptr<Model> model, sptr<IDrawable> cplane, sptr<Heatmap> hmap, sptr<IDrawable> marker, bool left_handed)
 	{
 		GLenum res = glewInit();
 		if (res != GLEW_OK) {
@@ -36,10 +36,12 @@ namespace sgtr {
 		model_ = std::move(model);
 		cplane_ = std::move(cplane);
 		hmap_ = std::move(hmap);
+		marker_ = std::move(marker);
 
 		uworld_ = getUniformAddr("gWorld");
 		hmap_->setSampler(getUniformAddr("Sampler0"));
 		usampler_ = getUniformAddr("SamplingEnabled");
+		umono_ = getUniformAddr("MonocolorEnabled");
 		left_handed_ = left_handed;
 
 		LOG(INFO) << "Render initialized";
@@ -65,6 +67,10 @@ namespace sgtr {
 
 		for (const auto& drawable : model_->getDrawableItems())
 			renderDrawable(drawable);
+
+		glUniform1i(umono_, 1);
+		renderDrawable(marker_);
+		glUniform1i(umono_, 0);
 
 		renderCPlane(viewport_w, viewport_h);
 	}

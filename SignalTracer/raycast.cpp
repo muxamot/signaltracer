@@ -10,6 +10,10 @@ static inline glm::vec3 toGLM(const math::Vector3f vect)
 	return vec3(vect.x, vect.y, vect.z);
 }
 
+template <typename T> static inline int sgn(T val) {
+	return (T(0) < val) - (val < T(0));
+}
+
 namespace sgtr {
 	
 	Raycast::Raycast(sptr<Model> model, sptr<Heatmap> heatmap, math::Vector3f signal_source, math::Vector2f cplane_size)
@@ -104,6 +108,9 @@ namespace sgtr {
 		auto ps_point = fromMapToPlaneSpace(std::move(point));
 		math::Vector3f destination = math::Vector3f{ ps_point.x, ps_point.y, offset_ };
 		
+		if (point.x == 0 && point.y == 0)
+			destination.Print();
+
 		float proj_distance = std::sqrt(std::powf(destination.x - source_.x, 2.0f)
 			+ std::powf(destination.y - source_.y, 2.0f) + std::powf(destination.z - source_.z, 2.0f));
 
@@ -130,18 +137,23 @@ namespace sgtr {
 	{
 		offset_ = offset;
 		filtered_triangles_.clear();
+		threads_.clear();
 
 		// drop unreachable triangles
 		iterateGeometry([&](triangle_vxset_t v) -> bool {
-			if (std::get<0>(v)->vertex_position_.z > offset_ || std::get<1>(v)->vertex_position_.z > offset_ 
-						|| std::get<2>(v)->vertex_position_.z > offset_)
-				filtered_triangles_.push_back(v);
+			const auto src = sgn(source_.z - offset_);
+			const auto r1 = sgn(std::get<0>(v)->vertex_position_.z - offset_);
+			const auto r2 = sgn(std::get<1>(v)->vertex_position_.z - offset_);
+			const auto r3 = sgn(std::get<2>(v)->vertex_position_.z - offset_);
+
+			if (r1 == src || r2 == src || r3 == src)
+				filtered_triangles_.emplace_back(std::move(v));
 			return true;
 		});
 
-		auto stripe = resolution_.x / threads_count_;
+		LOG(INFO) << "Filtered triangles = " << filtered_triangles_.size();
 
-		threads_.clear();
+		auto stripe = resolution_.x / threads_count_;
 		for (unsigned i = 0; i < threads_count_; i++) {
 			threads_.emplace_back([this, stripe, thread_num = i]() {
 				for (unsigned x = thread_num*stripe; x < ((thread_num*stripe)+stripe); x++)

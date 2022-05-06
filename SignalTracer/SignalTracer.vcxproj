@@ -138,6 +138,7 @@
     <ClCompile Include="heatmap.cpp" />
     <ClCompile Include="importer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="marker.cpp" />
     <ClCompile Include="matrix.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="model.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="heatmap.hpp" />
     <ClInclude Include="importer.hpp" />
     <ClInclude Include="logger.hpp" />
+    <ClInclude Include="marker.hpp" />
     <ClInclude Include="matrix.hpp" />
     <ClInclude Include="mesh.hpp" />
     <ClInclude Include="model.hpp" />

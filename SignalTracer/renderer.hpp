@@ -7,6 +7,7 @@
 #include "vertex.hpp"
 #include "heatmap.hpp"
 #include "model.hpp"
+#include "marker.hpp"
 
 namespace sgtr
 {
@@ -25,10 +26,12 @@ namespace sgtr
 		sptr<Shaders> shaders_;
 		sptr<IDrawable> cplane_;
 		sptr<Heatmap> hmap_;
+		sptr<IDrawable> marker_;
 
 		float cplane_offset_{0.0f};
 		GLuint uworld_;
 		GLuint usampler_;
+		GLuint umono_;
 
 		math::Vector3f position_;
 		math::Vector3f rotation_;
@@ -41,7 +44,7 @@ namespace sgtr
 	public:
 		Renderer() = default;
 
-		void init(sptr<Model>, sptr<IDrawable>, sptr<Heatmap>, bool = true);
+		void init(sptr<Model>, sptr<IDrawable>, sptr<Heatmap>, sptr<IDrawable>, bool = true);
 		void render(unsigned, unsigned);
 		
 		void applyPositionDelta(const math::Vector3f&);
