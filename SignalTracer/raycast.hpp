@@ -4,6 +4,7 @@
 #include <list>
 #include <tuple>
 
+#include "attenuation.hpp"
 #include "heatmap.hpp"
 #include "model.hpp"
 
@@ -16,7 +17,7 @@ namespace sgtr
 		using triangle_list_t = std::list<triangle_vxset_t>;
 		using geometry_iter_cb_t = std::function<bool(triangle_vxset_t)>;
 		
-		constexpr static auto DETECTION_PRECISION = 0.001f;
+		constexpr static auto DETECTION_PRECISION = 0.0001f;
 
 		triangle_list_t filtered_triangles_;
 		std::vector<std::thread> threads_;
@@ -25,6 +26,8 @@ namespace sgtr
 		math::Vector3f source_;
 		math::Vector2f cplane_size_;
 		math::Vector2ui resolution_;
+
+		sptr<Attenuation> attenuation_;
 		sptr<Model> model_;
 		sptr<Heatmap> heatmap_;
 		float offset_;
@@ -38,10 +41,11 @@ namespace sgtr
 
 		void iterateGeometry(geometry_iter_cb_t);
 		math::Vector2f fromMapToPlaneSpace(const math::Vector2ui&) const;
-		float getMapPointValue(math::Vector2ui);
+		void cast(math::Vector2ui);
+		void updateHeatmap();
 
 	public:
-		Raycast(sptr<Model>, sptr<Heatmap>, math::Vector3f, math::Vector2f);
+		Raycast(sptr<Attenuation>, sptr<Model>, sptr<Heatmap>, math::Vector3f, math::Vector2f);
 		~Raycast() = default;
 
 		void updateMap(float offset);

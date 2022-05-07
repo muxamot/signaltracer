@@ -21,7 +21,7 @@ namespace sgtr
 			case Action::BACKWARD: renderer_->applyPositionDelta(math::Vector3f{ 0.0f, 0.0f, (act.coeficient_ * WHEEL_SENSITIVITY) * POSITION_SENSITIVITY, }); break;
 			case Action::ROLL: onMouseMove(act.delta_); break;
 			case Action::CPLANE_CLIMB: cplane_->applyOffsetDelta(-CPLANE_SENSITIVITY); raycast_->updateMap(cplane_->offset()); break;
-			case Action::CPLANE_DESCEND: cplane_->applyOffsetDelta(CPLANE_SENSITIVITY); break;
+			case Action::CPLANE_DESCEND: cplane_->applyOffsetDelta(CPLANE_SENSITIVITY); raycast_->updateMap(cplane_->offset()); break;
 
 		default:
 			LOG(WARN) << "Undefined user action!";

@@ -10,14 +10,17 @@ static inline glm::vec3 toGLM(const math::Vector3f vect)
 	return vec3(vect.x, vect.y, vect.z);
 }
 
-template <typename T> static inline int sgn(T val) {
+template <typename T> 
+static inline int sgn(T val)
+{
 	return (T(0) < val) - (val < T(0));
 }
 
 namespace sgtr {
 	
-	Raycast::Raycast(sptr<Model> model, sptr<Heatmap> heatmap, math::Vector3f signal_source, math::Vector2f cplane_size)
-		: model_(std::move(model))
+	Raycast::Raycast(sptr<Attenuation> att, sptr<Model> model, sptr<Heatmap> heatmap, math::Vector3f signal_source, math::Vector2f cplane_size)
+		: attenuation_(std::move(att))
+		, model_(std::move(model))
 		, heatmap_(std::move(heatmap))
 		, source_(signal_source)
 		, cplane_size_(cplane_size)
@@ -99,17 +102,12 @@ namespace sgtr {
 			-1 * ((normalized_x * cplane_size_.x) - (cplane_size_.x / 2.0f)) };
 	}
 
-	float Raycast::getMapPointValue(math::Vector2ui point)
+	void Raycast::cast(math::Vector2ui point)
 	{
 		std::vector<float> hits;
-		bool wall{ false };
-		float score{ 1.0f };
-
+		
 		auto ps_point = fromMapToPlaneSpace(std::move(point));
 		math::Vector3f destination = math::Vector3f{ ps_point.x, ps_point.y, offset_ };
-		
-		if (point.x == 0 && point.y == 0)
-			destination.Print();
 
 		float proj_distance = std::sqrt(std::powf(destination.x - source_.x, 2.0f)
 			+ std::powf(destination.y - source_.y, 2.0f) + std::powf(destination.z - source_.z, 2.0f));
@@ -117,20 +115,33 @@ namespace sgtr {
 		for(const auto& triangle : filtered_triangles_) {
 			float dist = ray_intersection(source_, destination, std::get<0>(triangle)->vertex_position_, 
 				std::get<1>(triangle)->vertex_position_, std::get<2>(triangle)->vertex_position_);
-
+			
+			if (destination.x == -4.0 && std::fabs(destination.y) < DETECTION_PRECISION) {
+				source_.Print();
+				destination.Print();
+				LOG(INFO) << dist;
+			}
+			
 			if (dist > DETECTION_PRECISION && dist < proj_distance)
 				hits.push_back(dist);
 		}
 
-		std::sort(hits.begin(), hits.end());
+		attenuation_->addHitsVector(point, proj_distance, std::move(hits));
+	}
 
-		for (const auto& value : hits)
+	void Raycast::updateHeatmap()
+	{
+		attenuation_->normalize();
+
+		for (unsigned x = 0; x < resolution_.x; x++)
 		{
-			score -= 0.1f;
-			wall = !wall; //flip
+			for (unsigned y = 0; y < resolution_.y; y++)
+			{
+				heatmap_->setLevelAt(attenuation_->getNormalizedAttenuationValue({ x, y }), x, y);
+			}
 		}
-
-		return score;
+		
+		heatmap_->applyChanges();
 	}
 
 	void Raycast::updateMap(float offset)
@@ -157,12 +168,8 @@ namespace sgtr {
 		for (unsigned i = 0; i < threads_count_; i++) {
 			threads_.emplace_back([this, stripe, thread_num = i]() {
 				for (unsigned x = thread_num*stripe; x < ((thread_num*stripe)+stripe); x++)
-				{
 					for (unsigned y = 0; y < resolution_.y; y++)
-					{
-						heatmap_->setLevelAt(getMapPointValue({ x, y }), x, y);
-					}
-				}
+						cast({ x, y });
 			});
 		}
 		
@@ -170,6 +177,6 @@ namespace sgtr {
 			if (t.joinable())
 				t.join();
 
-		heatmap_->applyChanges();
+		updateHeatmap();
 	}
 }

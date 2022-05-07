@@ -27,13 +27,14 @@ namespace sgtr {
 		SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
 		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
 		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
 
 		sdl_window_ = SDL_CreateWindow("Signal Tracer 3D View",
 										SDL_WINDOWPOS_CENTERED,
 										SDL_WINDOWPOS_CENTERED,
 										desc_.width_, 
 										desc_.height_,
-										SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+										SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 		sdl_glcontext_ = SDL_GL_CreateContext(sdl_window_); 
 

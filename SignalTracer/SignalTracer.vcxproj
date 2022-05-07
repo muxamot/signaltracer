@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="actions.cpp" />
+    <ClCompile Include="attenuation.cpp" />
     <ClCompile Include="cutting_plane.cpp" />
     <ClCompile Include="heatmap.cpp" />
     <ClCompile Include="importer.cpp" />
@@ -151,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="actions.hpp" />
+    <ClInclude Include="attenuation.hpp" />
     <ClInclude Include="cutting_plane.hpp" />
     <ClInclude Include="drawable_interface.hpp" />
     <ClInclude Include="heatmap.hpp" />
