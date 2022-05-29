@@ -52,8 +52,8 @@ namespace sgtr
 	void Heatmap::setLevelAt(float normalized_level, size_t x, size_t y)
 	{
 		// blue zone
-		if (normalized_level <= 0.1) { at(x, y) = { 3, 1, 140 }; return; }
-		if (normalized_level <= 0.2) { at(x, y) = { 66, 89, 195 }; return; }
+		if (normalized_level <= 0.005) { at(x, y) = { 3, 1, 140 }; return; }
+		if (normalized_level <= 0.15) { at(x, y) = { 66, 89, 195 }; return; }
 		if (normalized_level <= 0.3) { at(x, y) = { 158, 194, 255 }; return; }
 
 		//green zone 

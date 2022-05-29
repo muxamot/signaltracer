@@ -4,17 +4,17 @@
 
 namespace sgtr
 {
-	Attenuation::Attenuation(math::Vector2ui resolution, AccessPointParams params)
-		: params_(params)
+	Attenuation::Attenuation(math::Vector2ui resolution)
+		: resolution_(std::move(resolution)) 
 	{
-		map_.resize(resolution.x);
-		for (auto& row : map_)
-			row.resize(resolution.y, 0.0f);
+		mapAllocate();
 	}
 
 	Attenuation::radio_att Attenuation::getAttenuation(float rair, float rcrt)
 	{
-		const auto l_air = 32.4f + 20 * std::log10f(params_.freq_ * 100) + 20 * std::log10f(rair / 1000.0f);
+		const auto l_air = 32.4f + 20 * std::log10f(params_.freq_ * 40.0f )
+				+ 20 * std::log10f(rair / 1000.0f);
+
 		const auto l_crt = params_.y_ * rcrt;
 		return radio_att{
 			l_air,
@@ -25,7 +25,8 @@ namespace sgtr
 
 	float Attenuation::getSNR(float distance, float rair, float rcrt)
 	{
-		return (params_.power_ + params_.gain_ - (getAttenuation(rair, rcrt).l_total_ / params_.scalefactor_)  - params_.noise_ 
+		return (params_.power_ + params_.gain_ 
+			- (getAttenuation(rair, rcrt).l_total_ / params_.scalefactor_)  - params_.noise_ 
 			- 10 * std::log10(k * params_.temperature_ * params_.cwidth_) - 90.0);
 	}
 
@@ -43,6 +44,25 @@ namespace sgtr
 		}
 
 		return spd;
+	}
+
+	void Attenuation::mapAllocate()
+	{
+		map_.resize(resolution_.x);
+		for (auto& row : map_)
+			row.resize(resolution_.y, 0.0f);
+	}
+
+	void Attenuation::clear()
+	{
+		for (auto& row : map_)
+			for (auto& entry : row)
+				entry = 0.0;
+	}
+
+	void Attenuation::setParams(const AccessPoint& params)
+	{
+		params_ = params;
 	}
 
 	void Attenuation::addHitsVector(math::Vector2ui point, float distance, hits_vec_t hits)
@@ -71,19 +91,17 @@ namespace sgtr
 
 		if (params_.map_type_ == ATTEN) {
 			const auto att = getAttenuation(rair, rcrt);
-			map_.at(point.x).at(point.y) = att.l_total_;
+			auto& entry = map_.at(point.x).at(point.y);
+			entry = std::max(att.l_total_, entry);
 			return;
 		}
 
 		const auto snr = getSNR(distance, rair, rcrt);
 		const auto spd = getSpeed(snr);
-		map_.at(point.x).at(point.y) = spd;
-
-		if (point.x == 0 && point.y == 0) {
-			LOG(INFO) << "snr " << snr;
-			LOG(INFO) << "spd " << spd;
-		}
-
+		
+		auto& entry = map_.at(point.x).at(point.y);
+		entry = std::max(spd, entry);
+		
 		return;
 	}
 
@@ -100,15 +118,12 @@ namespace sgtr
 					inf_count++;
 			}
 
-		LOG(INFO) << "inf count " << inf_count;
-		LOG(INFO) << "normal max " << max;
-
 		for (auto& row : map_)
 			for (auto& value : row)
 				value /= max;
 	}
 
-	float Attenuation::getNormalizedAttenuationValue(math::Vector2ui point)
+	float Attenuation::getNormalizedAttenuationValue(math::Vector2ui point) const noexcept
 	{
 		return map_.at(point.x).at(point.y);
 	}

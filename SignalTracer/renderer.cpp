@@ -60,7 +60,7 @@ namespace sgtr {
 		math::Pipeline p;
 		p.Rotate((left_handed_) ? 90 + rotation_.x : rotation_.x, rotation_.y, rotation_.z);
 		p.WorldPos(position_.x, position_.y, position_.z);
-		p.SetPerspectiveProj(75.0f, viewport_w, viewport_h, 0.1f, 10000.0f);
+		p.SetPerspectiveProj(45.0f, viewport_w, viewport_h, 0.1f, 10000.0f);
 
 		glUniformMatrix4fv(uworld_, 1, GL_TRUE, (const GLfloat*)p.GetWorldTrans().m);
 		glUniform1i(usampler_, 0);
@@ -101,7 +101,7 @@ namespace sgtr {
 		math::Pipeline p;
 		p.Rotate((left_handed_) ? 90 + rotation_.x : rotation_.x, rotation_.y, rotation_.z);
 		p.WorldPos(position_.x, position_.y, position_.z + cplane_offset_);
-		p.SetPerspectiveProj(75.0f, vw, vh, 0.1f, 10000.0f);
+		p.SetPerspectiveProj(45.0f, vw, vh, 0.1f, 10000.0f);
 
 		glUniformMatrix4fv(uworld_, 1, GL_TRUE, (const GLfloat*)p.GetWorldTrans().m);
 		glUniform1i(usampler_, 1);

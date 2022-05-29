@@ -5,6 +5,7 @@
 #include <tuple>
 
 #include "attenuation.hpp"
+#include "access_point.hpp"
 #include "heatmap.hpp"
 #include "model.hpp"
 
@@ -23,7 +24,8 @@ namespace sgtr
 		std::vector<std::thread> threads_;
 		size_t threads_count_{16};
 
-		math::Vector3f source_;
+		//math::Vector3f source_;
+		AccessPointsList ap_list_;
 		math::Vector2f cplane_size_;
 		math::Vector2ui resolution_;
 
@@ -41,11 +43,11 @@ namespace sgtr
 
 		void iterateGeometry(geometry_iter_cb_t);
 		math::Vector2f fromMapToPlaneSpace(const math::Vector2ui&) const;
-		void cast(math::Vector2ui);
+		void cast(const math::Vector2ui&, const math::Vector3f&);
 		void updateHeatmap();
 
 	public:
-		Raycast(sptr<Attenuation>, sptr<Model>, sptr<Heatmap>, math::Vector3f, math::Vector2f);
+		Raycast(sptr<Attenuation>, sptr<Model>, sptr<Heatmap>, AccessPointsList, math::Vector2f);
 		~Raycast() = default;
 
 		void updateMap(float offset);

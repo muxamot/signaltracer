@@ -17,7 +17,7 @@ void main()
 	if(SamplingEnabled != 0) {
 		TexCoord0 = TexCoord;
 	} else {
-		float cl = clamp(fract(abs(Position.x + Position.y + Position.z)), 0.1, 0.9);
+		float cl = clamp(fract(abs((Position.x + Position.z) / Position.y)), 0.1, 0.9);
 		Color = vec4(cl, cl, cl, 1.0);
 	}
 

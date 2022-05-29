@@ -4,37 +4,10 @@
 #include <vector>
 
 #include "vector.hpp"
+#include "access_point.hpp"
 
 namespace sgtr
 {
-
-	enum Type
-	{
-		ac,
-		ax
-	};
-
-	enum MapType
-	{
-		SPEED,
-		ATTEN
-	};
-
-	struct AccessPointParams
-	{
-		float freq_;
-		float y_;
-		float power_;
-		float gain_;
-		float gain_rcv_;
-		float noise_;
-		float cwidth_;
-		float temperature_;
-		float scalefactor_;
-		Type standard_;
-		MapType map_type_;
-	};
-
 	class Attenuation
 	{
 	private:
@@ -48,7 +21,8 @@ namespace sgtr
 		constexpr static std::array<float, 12> SNRSR2 = { 15.f, 18.f, 21.f, 28.f, 31.f, 33.f, 40.f, 45.f, 49.f, 53.f, 55.f, 57.f };
 
 		att_map_t map_;
-		AccessPointParams params_;
+		math::Vector2ui resolution_;
+		AccessPoint params_;
 
 		struct radio_att {
 			float l_air_;
@@ -59,13 +33,16 @@ namespace sgtr
 		radio_att getAttenuation(float, float);
 		float getSNR(float, float, float);
 		float getSpeed(float);
+		void mapAllocate();
 
 	public:
-		Attenuation(math::Vector2ui, AccessPointParams);
+		Attenuation(math::Vector2ui);
 
+		void clear();
+		void setParams(const AccessPoint&);
 		void addHitsVector(math::Vector2ui, float, hits_vec_t);
 		void normalize();
-		float getNormalizedAttenuationValue(math::Vector2ui);
+		float getNormalizedAttenuationValue(math::Vector2ui) const noexcept;
 	};
 
 }

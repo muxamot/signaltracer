@@ -151,6 +151,7 @@
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="access_point.hpp" />
     <ClInclude Include="actions.hpp" />
     <ClInclude Include="attenuation.hpp" />
     <ClInclude Include="cutting_plane.hpp" />

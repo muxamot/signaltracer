@@ -18,11 +18,11 @@ static inline int sgn(T val)
 
 namespace sgtr {
 	
-	Raycast::Raycast(sptr<Attenuation> att, sptr<Model> model, sptr<Heatmap> heatmap, math::Vector3f signal_source, math::Vector2f cplane_size)
+	Raycast::Raycast(sptr<Attenuation> att, sptr<Model> model, sptr<Heatmap> heatmap, AccessPointsList signal_sources, math::Vector2f cplane_size)
 		: attenuation_(std::move(att))
 		, model_(std::move(model))
 		, heatmap_(std::move(heatmap))
-		, source_(signal_source)
+		, ap_list_(std::move(signal_sources))
 		, cplane_size_(cplane_size)
 	{
 		resolution_ = heatmap_->getResolution();
@@ -35,7 +35,7 @@ namespace sgtr {
 		const math::Vector3f& vertex0, const math::Vector3f& vertex1, const math::Vector3f& vertex2) const
 	{
 		auto orig = toGLM(origin);
-		auto dir = toGLM(direction);
+		auto dir = toGLM((direction - origin).Normalize());
 		auto v0 = toGLM(vertex0);
 		auto v1 = toGLM(vertex1);
 		auto v2 = toGLM(vertex2);
@@ -102,26 +102,20 @@ namespace sgtr {
 			-1 * ((normalized_x * cplane_size_.x) - (cplane_size_.x / 2.0f)) };
 	}
 
-	void Raycast::cast(math::Vector2ui point)
+	void Raycast::cast(const math::Vector2ui& point, const math::Vector3f& source)
 	{
 		std::vector<float> hits;
 		
 		auto ps_point = fromMapToPlaneSpace(std::move(point));
 		math::Vector3f destination = math::Vector3f{ ps_point.x, ps_point.y, offset_ };
 
-		float proj_distance = std::sqrt(std::powf(destination.x - source_.x, 2.0f)
-			+ std::powf(destination.y - source_.y, 2.0f) + std::powf(destination.z - source_.z, 2.0f));
+		float proj_distance = std::sqrt(std::powf(destination.x - source.x, 2.0f)
+			+ std::powf(destination.y - source.y, 2.0f) + std::powf(destination.z - source.z, 2.0f));
 
 		for(const auto& triangle : filtered_triangles_) {
-			float dist = ray_intersection(source_, destination, std::get<0>(triangle)->vertex_position_, 
+			float dist = ray_intersection(source, destination, std::get<0>(triangle)->vertex_position_, 
 				std::get<1>(triangle)->vertex_position_, std::get<2>(triangle)->vertex_position_);
-			
-			if (destination.x == -4.0 && std::fabs(destination.y) < DETECTION_PRECISION) {
-				source_.Print();
-				destination.Print();
-				LOG(INFO) << dist;
-			}
-			
+						
 			if (dist > DETECTION_PRECISION && dist < proj_distance)
 				hits.push_back(dist);
 		}
@@ -147,35 +141,47 @@ namespace sgtr {
 	void Raycast::updateMap(float offset)
 	{
 		offset_ = offset;
-		filtered_triangles_.clear();
-		threads_.clear();
+		attenuation_->clear();
+		LOG(INFO) << "Started raycasting for set of " << ap_list_.size() << " signal sources";
 
-		// drop unreachable triangles
-		iterateGeometry([&](triangle_vxset_t v) -> bool {
-			const auto src = sgn(source_.z - offset_);
-			const auto r1 = sgn(std::get<0>(v)->vertex_position_.z - offset_);
-			const auto r2 = sgn(std::get<1>(v)->vertex_position_.z - offset_);
-			const auto r3 = sgn(std::get<2>(v)->vertex_position_.z - offset_);
+		std::for_each(ap_list_.begin(), ap_list_.end(), [&](const AccessPoint& source) {
+			LOG(INFO) << "Running raycast for signal source: "; 
+			source.signal_source_pos_.Print();
 
-			if (r1 == src || r2 == src || r3 == src)
-				filtered_triangles_.emplace_back(std::move(v));
-			return true;
-		});
+			filtered_triangles_.clear();
+			threads_.clear();
+			const auto& source_pos = source.signal_source_pos_;
+			attenuation_->setParams(source);
 
-		LOG(INFO) << "Filtered triangles = " << filtered_triangles_.size();
+			// drop unreachable triangles
+			iterateGeometry([&](triangle_vxset_t v) -> bool {
+				const auto src = sgn(source_pos.z - offset_);
+				const auto r1 = sgn(std::get<0>(v)->vertex_position_.z - offset_);
+				const auto r2 = sgn(std::get<1>(v)->vertex_position_.z - offset_);
+				const auto r3 = sgn(std::get<2>(v)->vertex_position_.z - offset_);
 
-		auto stripe = resolution_.x / threads_count_;
-		for (unsigned i = 0; i < threads_count_; i++) {
-			threads_.emplace_back([this, stripe, thread_num = i]() {
-				for (unsigned x = thread_num*stripe; x < ((thread_num*stripe)+stripe); x++)
-					for (unsigned y = 0; y < resolution_.y; y++)
-						cast({ x, y });
+				if (r1 == src || r2 == src || r3 == src)
+					filtered_triangles_.emplace_back(std::move(v));
+				return true;
 			});
-		}
-		
-		for (auto& t : threads_)
-			if (t.joinable())
-				t.join();
+
+			LOG(INFO) << "Filtered triangles: " << filtered_triangles_.size();
+
+			// test ray intersection for all filtered triangles  
+			auto stripe = resolution_.x / threads_count_;
+			for (unsigned i = 0; i < threads_count_; i++) {
+				threads_.emplace_back([this, stripe, source_pos, thread_num = i]() {
+					for (unsigned x = thread_num * stripe; x < ((thread_num*stripe) + stripe); x++)
+						for (unsigned y = 0; y < resolution_.y; y++)
+							cast({ x, y }, source_pos);
+				});
+			}
+
+			// join created threads
+			for (auto& t : threads_)
+				if (t.joinable())
+					t.join();
+		});
 
 		updateHeatmap();
 	}

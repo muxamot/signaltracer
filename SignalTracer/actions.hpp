@@ -35,10 +35,10 @@ namespace sgtr
 	class ActionsController 
 	{
 	private:
-		constexpr static float POSITION_SENSITIVITY = 0.3f;
+		constexpr static float POSITION_SENSITIVITY = 1.0f;
 		constexpr static float ROTATION_SENSITIVITY = 0.5f;
-		constexpr static float WHEEL_SENSITIVITY = 2.5f;
-		constexpr static float CPLANE_SENSITIVITY = 0.5f; //0.05f;
+		constexpr static float WHEEL_SENSITIVITY = 5.5f;
+		constexpr static float CPLANE_SENSITIVITY = 5.0f; //0.05f;
 
 		sptr<Renderer> renderer_;
 		sptr<ÑuttingPlane> cplane_;

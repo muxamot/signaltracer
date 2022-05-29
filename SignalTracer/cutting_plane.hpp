@@ -15,7 +15,7 @@ namespace sgtr
 		constexpr static std::array<unsigned int, INDEX_COUNT> index_ = { 3, 0, 1, 1, 2, 3 };
 		std::array<math::Vertex, VERTEX_COUNT> vertex_;
 
-		float offset_{ 0.0 };
+		float offset_{ 0.1 };
 		float wx_, wy_;
 		GLuint vb_;
 		GLuint ib_;
