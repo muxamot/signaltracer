@@ -5,7 +5,7 @@
 namespace sgtr
 {
 	Attenuation::Attenuation(math::Vector2ui resolution)
-		: resolution_(std::move(resolution)) 
+		: resolution_(std::move(resolution)), stats_(resolution_.x * resolution_.y)
 	{
 		mapAllocate();
 	}
@@ -103,6 +103,17 @@ namespace sgtr
 		entry = std::max(spd, entry);
 		
 		return;
+	}
+
+	void Attenuation::statsPrint()
+	{
+		stats_.reset();
+
+		for (auto& row : map_)
+			for (auto& value : row)
+				stats_.count(static_cast<unsigned>(std::floorf(value)));
+
+		stats_.print();
 	}
 
 	void Attenuation::normalize()

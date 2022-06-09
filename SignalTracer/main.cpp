@@ -34,7 +34,7 @@ AccessPointsList make_ap_list()
 	p1.scalefactor_ = 1.45f;
 
 	AccessPoint p2;
-	p2.signal_source_pos_ = math::Vector3f{ 0.0f, 0.0f, -20.001f };
+	p2.signal_source_pos_ = math::Vector3f{ 85.0f, -75.0f, -20.001f };
 	p2.freq_ = 5150;
 	p2.y_ = 4;
 	p2.power_ = 12;
@@ -45,8 +45,63 @@ AccessPointsList make_ap_list()
 	p2.standard_ = ax;
 	p2.map_type_ = SPEED;
 	p2.scalefactor_ = 1.45f;
+	
+	AccessPoint p3;
+	p3.signal_source_pos_ = math::Vector3f{ 95.0f, 55.0f, -20.001f };
+	p3.freq_ = 5150;
+	p3.y_ = 4;
+	p3.power_ = 12;
+	p3.gain_ = 5;
+	p3.noise_ = 2;
+	p3.cwidth_ = 40;
+	p3.temperature_ = 300;
+	p3.standard_ = ax;
+	p3.map_type_ = SPEED;
+	p3.scalefactor_ = 1.45f;
 
-	return { p1, p2 };
+
+	AccessPoint p4;
+	p4.signal_source_pos_ = math::Vector3f{ -85.0f, 65.0f, -20.001f };
+	p4.freq_ = 5150;
+	p4.y_ = 4;
+	p4.power_ = 12;
+	p4.gain_ = 5;
+	p4.noise_ = 2;
+	p4.cwidth_ = 40;
+	p4.temperature_ = 300;
+	p4.standard_ = ax;
+	p4.map_type_ = SPEED;
+	p4.scalefactor_ = 1.45f;
+
+
+	AccessPoint p5;
+	p5.signal_source_pos_ = math::Vector3f{ 195.0f, 0.0f, -20.001f };
+	p5.freq_ = 5150;
+	p5.y_ = 4;
+	p5.power_ = 12;
+	p5.gain_ = 5;
+	p5.noise_ = 2;
+	p5.cwidth_ = 40;
+	p5.temperature_ = 300;
+	p5.standard_ = ax;
+	p5.map_type_ = SPEED;
+	p5.scalefactor_ = 1.45f;
+
+	AccessPoint p6;
+	p6.signal_source_pos_ = math::Vector3f{ -65.0f, 0.0f, -20.001f };
+	p6.freq_ = 5150;
+	p6.y_ = 4;
+	p6.power_ = 12;
+	p6.gain_ = 5;
+	p6.noise_ = 2;
+	p6.cwidth_ = 40;
+	p6.temperature_ = 300;
+	p6.standard_ = ax;
+	p6.map_type_ = SPEED;
+	p6.scalefactor_ = 1.45f;
+
+
+	return { p1, p2, p3, p4, p5, p6 };
 }
 
 int main(int argc, char** argv)
@@ -54,8 +109,8 @@ int main(int argc, char** argv)
 	try {
 		auto cplane_x = 500.0f;
 		auto cplane_y = 500.0f;
-		unsigned res_x = 512;
-		unsigned res_y = 512;
+		unsigned res_x = 64;
+		unsigned res_y = 64;
 		auto access_points = make_ap_list();
 
 		auto renderer = std::make_shared<Renderer>();

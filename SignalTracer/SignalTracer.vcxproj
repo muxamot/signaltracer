@@ -169,6 +169,7 @@
     <ClInclude Include="raycast.hpp" />
     <ClInclude Include="renderer.hpp" />
     <ClInclude Include="shaders.hpp" />
+    <ClInclude Include="stats.hpp" />
     <ClInclude Include="types.hpp" />
     <ClInclude Include="vector.hpp" />
     <ClInclude Include="vertex.hpp" />

@@ -125,6 +125,7 @@ namespace sgtr {
 
 	void Raycast::updateHeatmap()
 	{
+		attenuation_->statsPrint();
 		attenuation_->normalize();
 
 		for (unsigned x = 0; x < resolution_.x; x++)

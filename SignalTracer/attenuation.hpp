@@ -5,6 +5,7 @@
 
 #include "vector.hpp"
 #include "access_point.hpp"
+#include "stats.hpp"
 
 namespace sgtr
 {
@@ -23,6 +24,7 @@ namespace sgtr
 		att_map_t map_;
 		math::Vector2ui resolution_;
 		AccessPoint params_;
+		Stats<unsigned> stats_;
 
 		struct radio_att {
 			float l_air_;
@@ -41,6 +43,7 @@ namespace sgtr
 		void clear();
 		void setParams(const AccessPoint&);
 		void addHitsVector(math::Vector2ui, float, hits_vec_t);
+		void statsPrint();
 		void normalize();
 		float getNormalizedAttenuationValue(math::Vector2ui) const noexcept;
 	};
