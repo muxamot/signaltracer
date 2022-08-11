@@ -1,0 +1,9 @@
+BasedOnStyle: Microsoft
+
+DerivePointerAlignment: false
+PointerAlignment: Left
+BreakConstructorInitializers: BeforeComma
+AlwaysBreakTemplateDeclarations: Yes
+TabWidth: 4
+UseTab: Never
+AccessModifierOffset: -4
