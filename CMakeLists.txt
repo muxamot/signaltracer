@@ -59,3 +59,9 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/fragment.glsl
                    COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/glsl/fragment.glsl
                                                     ${CMAKE_CURRENT_BINARY_DIR}/fragment.glsl
                    DEPENDS ${PROJECT_SOURCE_DIR}/glsl/fragment.glsl)
+
+add_custom_target(test-plan ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/plan.fbx)
+add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/plan.fbx
+                   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/test/plan.fbx
+                                                    ${CMAKE_CURRENT_BINARY_DIR}/plan.fbx
+                   DEPENDS ${PROJECT_SOURCE_DIR}/test/plan.fbx)

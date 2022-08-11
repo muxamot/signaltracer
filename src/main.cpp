@@ -101,15 +101,16 @@ AccessPointsList make_ap_list()
     return {p1, p2, p3, p4, p5, p6};
 }
 
-int main(int argc, char** argv)
+int main(int argc, const char** argv)
 {
     try
     {
         auto cplane_x = 500.0f;
         auto cplane_y = 500.0f;
-        unsigned res_x = 64;
-        unsigned res_y = 64;
+        unsigned res_x = 512;
+        unsigned res_y = 512;
         auto access_points = make_ap_list();
+        auto model_name = (argc == 2) ? std::string{argv[1]} : std::string{"plan.fbx"};
 
         auto renderer = std::make_shared<Renderer>();
         auto plane = std::make_shared<CuttingPlane>(cplane_x, cplane_y);
@@ -118,7 +119,7 @@ int main(int argc, char** argv)
                                                                 [actions](UserAction act) { actions->onAction(act); },
                                                                 width, height});
 
-        auto importer = std::make_shared<Importer>("test_meshes\\plan0.fbx");
+        auto importer = std::make_shared<Importer>(model_name);
         auto model = importer->getGeometry();
         auto heatmap = std::make_shared<Heatmap>(res_x, res_y);
         auto attenuation = std::make_shared<Attenuation>(heatmap->getResolution());
