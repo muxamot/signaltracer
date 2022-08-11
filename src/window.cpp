@@ -2,7 +2,6 @@
 #include "logger.hpp"
 #include "opengl.hpp"
 
-
 namespace sgtr
 {
 

@@ -5,7 +5,6 @@
 #include "renderer.hpp"
 #include "vertex.hpp"
 
-
 #define BUFFER_OFFSET(i) ((GLuint*)NULL + (sizeof(unsigned) * 3 * i))
 
 namespace sgtr

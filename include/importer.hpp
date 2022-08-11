@@ -1,28 +1,30 @@
 #pragma once
 
-#include <string>
 #include <assimp/matrix4x4.h>
 #include <assimp/mesh.h>
+#include <string>
 
 #include "drawable_interface.hpp"
-#include "types.hpp"
 #include "model.hpp"
+#include "types.hpp"
 
-namespace sgtr 
-{	
-	class Importer
-	{
-	private:
-		using node_t = std::pair<sptr<IDrawable>, GeometryData>;
+namespace sgtr
+{
 
-		sptr<Model> model_;
-		size_t transfrom_count_{0};
-		aiMatrix4x4 root_transform_matrix_;
+class Importer
+{
+private:
+    using node_t = std::pair<sptr<IDrawable>, GeometryData>;
 
-		node_t generate_node(const aiMesh*);
+    sptr<Model> model_;
+    size_t transfrom_count_{0};
+    aiMatrix4x4 root_transform_matrix_;
 
-	public:
-		Importer(const std::string&);
-		sptr<Model> getGeometry();
-	};
-}
+    node_t generate_node(const aiMesh*);
+
+public:
+    Importer(const std::string&);
+    sptr<Model> getGeometry();
+};
+
+} // namespace sgtr

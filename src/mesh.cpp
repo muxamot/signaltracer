@@ -4,7 +4,6 @@
 #include "mesh.hpp"
 #include "opengl.hpp"
 
-
 namespace sgtr
 {
 

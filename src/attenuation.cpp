@@ -4,6 +4,7 @@
 
 namespace sgtr
 {
+
 Attenuation::Attenuation(math::Vector2ui resolution)
     : resolution_(std::move(resolution))
     , stats_(resolution_.x * resolution_.y)
@@ -135,4 +136,5 @@ float Attenuation::getNormalizedAttenuationValue(math::Vector2ui point) const no
 {
     return map_.at(point.x).at(point.y);
 }
+
 } // namespace sgtr

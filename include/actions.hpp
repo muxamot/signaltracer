@@ -5,9 +5,9 @@
 #include "renderer.hpp"
 #include "types.hpp"
 
-
 namespace sgtr
 {
+
 enum class Action
 {
     // coords
@@ -53,4 +53,5 @@ public:
     void onAction(const UserAction&);
     void set(sptr<Renderer>, sptr<CuttingPlane>, sptr<Raycast>);
 };
+
 } // namespace sgtr

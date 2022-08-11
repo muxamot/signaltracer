@@ -4,6 +4,7 @@
 
 namespace sgtr
 {
+
 void ActionsController::onMouseMove(const math::Vector2i& delta)
 {
     renderer_->applyRotationDelta(math::Vector3f{-ROTATION_SENSITIVITY * static_cast<float>(delta.y),

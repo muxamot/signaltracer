@@ -5,7 +5,6 @@
 #include "opengl.hpp"
 #include "shaders.hpp"
 
-
 namespace sgtr
 {
 

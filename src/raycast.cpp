@@ -196,4 +196,5 @@ void Raycast::updateMap(float offset)
 
     updateHeatmap();
 }
+
 } // namespace sgtr

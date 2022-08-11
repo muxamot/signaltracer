@@ -3,7 +3,6 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-
 #include <assert.h>
 
 #include "importer.hpp"
@@ -13,9 +12,9 @@
 #include "vector.hpp"
 #include "vertex.hpp"
 
-
 namespace sgtr
 {
+
 Importer::Importer(const std::string& filename)
 {
     LOG(INFO) << "Import path = " << filename;
@@ -88,4 +87,5 @@ sptr<Model> Importer::getGeometry()
 {
     return model_;
 }
+
 } // namespace sgtr

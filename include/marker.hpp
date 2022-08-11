@@ -6,24 +6,26 @@
 
 namespace sgtr
 {
-	class Marker : public IDrawable
-	{
-	private:
-		constexpr static size_t VERTEX_BY_MARKER_COUNT_{ 5 };
-		constexpr static size_t INDEX_BY_MARKER_COUNT_{ 18 };
-		
-		size_t idx_count_;
-		GLuint ib_{ INVALID_OGL_VALUE };
-		GLuint vb_{ INVALID_OGL_VALUE };
 
-		void createVB(const AccessPointsList& ap_list);
-		size_t createIB(size_t);
+class Marker : public IDrawable
+{
+private:
+    constexpr static size_t VERTEX_BY_MARKER_COUNT_{5};
+    constexpr static size_t INDEX_BY_MARKER_COUNT_{18};
 
-	public:
-		Marker(const AccessPointsList&);
+    size_t idx_count_;
+    GLuint ib_{INVALID_OGL_VALUE};
+    GLuint vb_{INVALID_OGL_VALUE};
 
-		size_t getIndexCount() const;
-		GLuint getIndexBuffer() const;
-		GLuint getVertexBuffer() const;
-	};
-}
+    void createVB(const AccessPointsList& ap_list);
+    size_t createIB(size_t);
+
+public:
+    Marker(const AccessPointsList&);
+
+    size_t getIndexCount() const;
+    GLuint getIndexBuffer() const;
+    GLuint getVertexBuffer() const;
+};
+
+} // namespace sgtr

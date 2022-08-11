@@ -12,6 +12,7 @@
 
 namespace sgtr
 {
+
 class Raycast
 {
 private:
