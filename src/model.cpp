@@ -15,7 +15,7 @@ void Model::add(sptr<IDrawable> drawable, GeometryData gdata)
     meshes_geometry_.emplace_back(std::move(gdata));
 }
 
-drawable_list_t& Model::getDrawableItems()
+drawable_vec_t& Model::getDrawableItems()
 {
     return meshes_;
 }

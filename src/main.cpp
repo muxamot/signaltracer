@@ -3,6 +3,7 @@
 #include <assimp/BaseImporter.h>
 
 #include "attenuation.hpp"
+#include "configuration.hpp"
 #include "cutting_plane.hpp"
 #include "heatmap.hpp"
 #include "importer.hpp"
@@ -18,114 +19,42 @@ const int height = 768;
 
 using namespace sgtr;
 
-AccessPointsList make_ap_list()
-{
-    AccessPoint p1;
-    p1.signal_source_pos_ = math::Vector3f{-65.0f, -70.0f, -20.001f};
-    p1.freq_ = 5150;
-    p1.y_ = 4;
-    p1.power_ = 12;
-    p1.gain_ = 5;
-    p1.noise_ = 2;
-    p1.cwidth_ = 40;
-    p1.temperature_ = 300;
-    p1.standard_ = ax;
-    p1.map_type_ = SPEED;
-    p1.scalefactor_ = 1.45f;
-
-    AccessPoint p2;
-    p2.signal_source_pos_ = math::Vector3f{85.0f, -75.0f, -20.001f};
-    p2.freq_ = 5150;
-    p2.y_ = 4;
-    p2.power_ = 12;
-    p2.gain_ = 5;
-    p2.noise_ = 2;
-    p2.cwidth_ = 40;
-    p2.temperature_ = 300;
-    p2.standard_ = ax;
-    p2.map_type_ = SPEED;
-    p2.scalefactor_ = 1.45f;
-
-    AccessPoint p3;
-    p3.signal_source_pos_ = math::Vector3f{95.0f, 55.0f, -20.001f};
-    p3.freq_ = 5150;
-    p3.y_ = 4;
-    p3.power_ = 12;
-    p3.gain_ = 5;
-    p3.noise_ = 2;
-    p3.cwidth_ = 40;
-    p3.temperature_ = 300;
-    p3.standard_ = ax;
-    p3.map_type_ = SPEED;
-    p3.scalefactor_ = 1.45f;
-
-    AccessPoint p4;
-    p4.signal_source_pos_ = math::Vector3f{-85.0f, 65.0f, -20.001f};
-    p4.freq_ = 5150;
-    p4.y_ = 4;
-    p4.power_ = 12;
-    p4.gain_ = 5;
-    p4.noise_ = 2;
-    p4.cwidth_ = 40;
-    p4.temperature_ = 300;
-    p4.standard_ = ax;
-    p4.map_type_ = SPEED;
-    p4.scalefactor_ = 1.45f;
-
-    AccessPoint p5;
-    p5.signal_source_pos_ = math::Vector3f{195.0f, 0.0f, -20.001f};
-    p5.freq_ = 5150;
-    p5.y_ = 4;
-    p5.power_ = 12;
-    p5.gain_ = 5;
-    p5.noise_ = 2;
-    p5.cwidth_ = 40;
-    p5.temperature_ = 300;
-    p5.standard_ = ax;
-    p5.map_type_ = SPEED;
-    p5.scalefactor_ = 1.45f;
-
-    AccessPoint p6;
-    p6.signal_source_pos_ = math::Vector3f{-65.0f, 0.0f, -20.001f};
-    p6.freq_ = 5150;
-    p6.y_ = 4;
-    p6.power_ = 12;
-    p6.gain_ = 5;
-    p6.noise_ = 2;
-    p6.cwidth_ = 40;
-    p6.temperature_ = 300;
-    p6.standard_ = ax;
-    p6.map_type_ = SPEED;
-    p6.scalefactor_ = 1.45f;
-
-    return {p1, p2, p3, p4, p5, p6};
-}
-
 int main(int argc, const char** argv)
 {
     try
     {
-        auto cplane_x = 500.0f;
-        auto cplane_y = 500.0f;
-        unsigned res_x = 512;
-        unsigned res_y = 512;
-        auto access_points = make_ap_list();
-        auto model_name = (argc == 2) ? std::string{argv[1]} : std::string{"plan.fbx"};
+        std::string model_fname;
+        std::string config_fname;
+
+        // clang-format off
+        if (argc == 1) {
+            LOG(INFO) << "No filnames provided in args, using some test defaults";
+            model_fname = "plan.fbx";
+            config_fname = "plan-params.json";
+        } else if (argc == 3) {
+            model_fname = std::string{argv[1]};
+            config_fname = std::string{argv[2]};
+        } else {
+            throw std::runtime_error{"Invalid args count. Usage: ./sigtracer <MODEL> <CONFIG>"};
+        }
+        // clang-format on
+
+        auto config = Configuration{config_fname};
 
         auto renderer = std::make_shared<Renderer>();
-        auto plane = std::make_shared<CuttingPlane>(cplane_x, cplane_y);
+        auto plane = std::make_shared<CuttingPlane>(config.getCuttingPlaneSize());
         auto actions = std::make_shared<ActionsController>();
         auto window = std::make_shared<Window>(WindowDescriptor{[renderer]() { renderer->render(width, height); },
                                                                 [actions](UserAction act) { actions->onAction(act); },
                                                                 width, height});
 
-        auto importer = std::make_shared<Importer>(model_name);
+        auto importer = std::make_shared<Importer>(model_fname);
         auto model = importer->getGeometry();
-        auto heatmap = std::make_shared<Heatmap>(res_x, res_y);
+        auto heatmap = std::make_shared<Heatmap>(config.getHeatmapResolution());
         auto attenuation = std::make_shared<Attenuation>(heatmap->getResolution());
-        auto marker = std::make_shared<Marker>(access_points);
-        auto raycast = std::make_shared<Raycast>(std::move(attenuation), model, heatmap, std::move(access_points),
-                                                 math::Vector2f{cplane_x, cplane_y});
+        auto marker = std::make_shared<Marker>(config.getAPList());
+        auto raycast = std::make_shared<Raycast>(std::move(attenuation), model, heatmap, config.getAPList(),
+                                                 config.getCuttingPlaneSize());
 
         plane->createPlane();
         actions->set(renderer, plane, std::move(raycast));

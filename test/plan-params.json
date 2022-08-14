@@ -1,0 +1,82 @@
+{
+    "signal_sources": [
+        {
+            "position": {
+                "x": -65.0,
+                "y": -70.0,
+                "z": -20.001
+            },
+            "frequency": 5150,
+            "attenuation": 4,
+            "power": 12,
+            "gain": 5,
+            "noise": 2,
+            "channel_width": 40,
+            "temperature": 300,
+            "standard": "ax"
+        },
+        {
+            "position": {
+                "x": 85.0,
+                "y": -75.0,
+                "z": -20.001
+            },
+            "frequency": 5150,
+            "attenuation": 4,
+            "power": 12,
+            "gain": 5,
+            "noise": 2,
+            "channel_width": 40,
+            "temperature": 300,
+            "standard": "ax"
+        },
+        {
+            "position": {
+                "x": 95.0,
+                "y": 55.0,
+                "z": -20.001
+            },
+            "frequency": 5150,
+            "attenuation": 4,
+            "power": 12,
+            "gain": 5,
+            "noise": 2,
+            "channel_width": 40,
+            "temperature": 300,
+            "standard": "ax"
+        },
+        {
+            "position": {
+                "x": 195.0,
+                "y": 0.0,
+                "z": -20.001
+            },
+            "frequency": 5150,
+            "attenuation": 4,
+            "power": 12,
+            "gain": 5,
+            "noise": 2,
+            "channel_width": 40,
+            "temperature": 300,
+            "standard": "ax"
+        },
+        {
+            "position": {
+                "x": -65.0,
+                "y": 0.0,
+                "z": -20.001
+            },
+            "frequency": 5150,
+            "attenuation": 4,
+            "power": 12,
+            "gain": 5,
+            "noise": 2,
+            "channel_width": 40,
+            "temperature": 300,
+            "standard": "ax"
+        }
+    ],
+    "cutting_plane_size": 500.0,
+    "heatmap_resolution": 512,
+    "scale": 1.45
+}

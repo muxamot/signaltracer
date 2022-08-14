@@ -26,8 +26,7 @@ private:
     std::vector<std::thread> threads_;
     size_t threads_count_{16};
 
-    // math::Vector3f source_;
-    AccessPointsList ap_list_;
+    sptr<ap_vec_t> ap_list_;
     math::Vector2f cplane_size_;
     math::Vector2ui resolution_;
 
@@ -45,7 +44,7 @@ private:
     void updateHeatmap();
 
 public:
-    Raycast(sptr<Attenuation>, sptr<Model>, sptr<Heatmap>, AccessPointsList, math::Vector2f);
+    Raycast(sptr<Attenuation>, sptr<Model>, sptr<Heatmap>, sptr<ap_vec_t>, cplane_size_t);
     ~Raycast() = default;
 
     void updateMap(float offset);

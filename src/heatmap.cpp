@@ -3,9 +3,9 @@
 namespace sgtr
 {
 
-Heatmap::Heatmap(unsigned width, unsigned height)
-    : width_(width)
-    , height_(height)
+Heatmap::Heatmap(heatmap_res_t res)
+    : width_(res.x_)
+    , height_(res.y_)
 {
     buffer_.resize(width_ * height_);
 

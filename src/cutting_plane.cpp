@@ -5,9 +5,9 @@
 namespace sgtr
 {
 
-CuttingPlane::CuttingPlane(float wx, float wy)
-    : wx_(wx / 2.0f)
-    , wy_(wy / 2.0f)
+CuttingPlane::CuttingPlane(cplane_size_t resolution)
+    : wx_(resolution.x_ / 2.0f)
+    , wy_(resolution.y_ / 2.0f)
 {
 }
 

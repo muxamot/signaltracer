@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "opengl.hpp"
+#include "types.hpp"
 #include "vector.hpp"
 
 namespace sgtr
@@ -33,7 +34,7 @@ private:
     Pixel& at(size_t, size_t);
 
 public:
-    Heatmap(unsigned, unsigned);
+    Heatmap(heatmap_res_t);
 
     void setLevelAt(float, size_t, size_t);
     void bind(GLenum);

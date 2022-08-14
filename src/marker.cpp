@@ -7,7 +7,7 @@
 namespace sgtr
 {
 
-void Marker::createVB(const AccessPointsList& ap_list)
+void Marker::createVB(const ap_vec_t& ap_list)
 {
     using namespace math;
     std::vector<Vertex> vertex;
@@ -48,10 +48,10 @@ size_t Marker::createIB(size_t ap_count)
     return index.size();
 }
 
-Marker::Marker(const AccessPointsList& ap_list)
+Marker::Marker(sptr<ap_vec_t> ap_list)
 {
-    idx_count_ = createIB(ap_list.size());
-    createVB(std::move(ap_list));
+    idx_count_ = createIB(ap_list->size());
+    createVB(*ap_list);
 }
 
 size_t Marker::getIndexCount() const

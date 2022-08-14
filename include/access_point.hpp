@@ -3,9 +3,9 @@
 #include "vector.hpp"
 #include <vector>
 
-
 namespace sgtr
 {
+
 enum Type
 {
     ac,
@@ -35,5 +35,4 @@ struct AccessPoint
     MapType map_type_;
 };
 
-using AccessPointsList = std::vector<AccessPoint>;
 } // namespace sgtr

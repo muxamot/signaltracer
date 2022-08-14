@@ -2,6 +2,7 @@
 
 #include "access_point.hpp"
 #include "drawable_interface.hpp"
+#include "types.hpp"
 #include "vector.hpp"
 
 namespace sgtr
@@ -17,11 +18,11 @@ private:
     GLuint ib_{INVALID_OGL_VALUE};
     GLuint vb_{INVALID_OGL_VALUE};
 
-    void createVB(const AccessPointsList& ap_list);
+    void createVB(const ap_vec_t& ap_list);
     size_t createIB(size_t);
 
 public:
-    Marker(const AccessPointsList&);
+    Marker(sptr<ap_vec_t>);
 
     size_t getIndexCount() const;
     GLuint getIndexBuffer() const;

@@ -19,13 +19,13 @@ static inline int sgn(T val)
 namespace sgtr
 {
 
-Raycast::Raycast(sptr<Attenuation> att, sptr<Model> model, sptr<Heatmap> heatmap, AccessPointsList signal_sources,
-                 math::Vector2f cplane_size)
+Raycast::Raycast(sptr<Attenuation> att, sptr<Model> model, sptr<Heatmap> heatmap, sptr<ap_vec_t> signal_sources,
+                 cplane_size_t cplane_size)
     : attenuation_(std::move(att))
     , model_(std::move(model))
     , heatmap_(std::move(heatmap))
     , ap_list_(std::move(signal_sources))
-    , cplane_size_(cplane_size)
+    , cplane_size_(math::Vector2f{cplane_size.x_, cplane_size.y_})
 {
     resolution_ = heatmap_->getResolution();
     threads_count_ = std::thread::hardware_concurrency();
@@ -152,9 +152,9 @@ void Raycast::updateMap(float offset)
 {
     offset_ = offset;
     attenuation_->clear();
-    LOG(INFO) << "Started raycasting for set of " << ap_list_.size() << " signal sources";
+    LOG(INFO) << "Started raycasting for set of " << ap_list_->size() << " signal sources";
 
-    std::for_each(ap_list_.begin(), ap_list_.end(), [&](const AccessPoint& source) {
+    std::for_each(ap_list_->begin(), ap_list_->end(), [&](const AccessPoint& source) {
         LOG(INFO) << "Running raycast for signal source: ";
         source.signal_source_pos_.Print();
 

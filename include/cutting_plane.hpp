@@ -3,6 +3,7 @@
 #include <array>
 
 #include "drawable_interface.hpp"
+#include "types.hpp"
 #include "vertex.hpp"
 
 namespace sgtr
@@ -27,7 +28,7 @@ class CuttingPlane : public IDrawable
     void createIB();
 
 public:
-    CuttingPlane(float, float);
+    CuttingPlane(cplane_size_t);
     ~CuttingPlane() override = default;
 
     void createPlane();
